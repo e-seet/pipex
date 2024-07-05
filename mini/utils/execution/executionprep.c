@@ -13,9 +13,19 @@ void	init_command_internal_prep_argv(struct s_AST_Node *rootnode,
 	{
 		printf("i = 0; type:%d \n", argnode->type);
 		parameters->argv = (char **)malloc(sizeof(char *) * (1 + 1));
+		if (parameters->argv == NULL)
+		{
+			perror("Malloc parameters argv failed\n");
+		}
 	}
 	else
+	{
 		parameters->argv = (char **) malloc(sizeof(char *) * ((*i) + 1));
+		if (parameters->argv == NULL)
+		{
+			perror("Malloc parameters argv failed\n");
+		}
+	}
 	argnode = rootnode;
 	(*i) = 0;
 	while (
@@ -23,6 +33,10 @@ void	init_command_internal_prep_argv(struct s_AST_Node *rootnode,
 			|| nodetype(argnode->type) == NODE_CMDPATH))
 	{
 		parameters->argv[*i] = (char *)malloc(ft_strlen(argnode->data) + 1);
+		if (parameters->argv[*i] == NULL)
+		{
+			perror("Malloc parameters argv failed\n");
+		}
 		ft_strlcpy(parameters->argv[*i], argnode->data,
 			ft_strlen(argnode->data) + 1);
 		argnode = argnode->right;
@@ -48,6 +62,10 @@ int	init_command_internal(struct s_AST_Node *rootnode,
 	if (i == 0)
 	{
 		parameters->argv[0] = (char *)malloc(ft_strlen(argnode->data) + 1);
+		if (parameters->argv[0] == NULL)
+		{
+			perror("Malloc parameters argv failed\n");
+		}
 		ft_strlcpy(parameters->argv[0], argnode->data,
 			ft_strlen(argnode->data) + 1);
 	}

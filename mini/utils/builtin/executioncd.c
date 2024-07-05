@@ -10,9 +10,14 @@ void	execution_cd_success(t_mini *mini, char *currpwd)
 
 // case 1 if: ~
 // case 2 else: ~/smth
+// We get the home directory first
+
+// then we combine the required for case 2
+// in find env, it will check for $ variable and replace it
 void	execute_cd_arg_tilde(char *envvariable, t_mini *mini,
 		char *currpwd, t_parameters *parameters)
 {
+	char	*temp;
 	envvariable = getenv("HOME");
 	if (ft_strlen(parameters->argv[1]) == 1)
 	{
@@ -26,8 +31,10 @@ void	execute_cd_arg_tilde(char *envvariable, t_mini *mini,
 	}
 	else
 	{
-		if (chdir(ft_strjoin(envvariable,
-					&parameters->argv[1][1])) != 0)
+		temp = ft_strjoin(envvariable, &parameters->argv[1][1]);
+		if (mini->envnum != 0)
+			findenvvariable(&temp, mini, mini->envnum);
+		if (chdir(temp) != 0)
 		{
 			perror("Error changing to this directory\n");
 			mini->exit_status = 2;
@@ -38,7 +45,7 @@ void	execute_cd_arg_tilde(char *envvariable, t_mini *mini,
 }
 
 // cd to $env_variable
-// cater to just $ path
+// cater to just $.. path
 // eg: $Home
 // $DOCUMENT
 // this may not be used as i have changed from env to path
@@ -68,6 +75,8 @@ void	execute_cd_arg_env(char *envvariable, t_mini *mini,
 // default
 void	execute_cd_argc2(t_mini *mini, char *currpwd, t_parameters *parameters)
 {
+	char *temp;
+
 	if (parameters->argv[1][0] == '-')
 	{
 		if (mini->prevpwd != NULL)
@@ -88,13 +97,29 @@ void	execute_cd_argc2(t_mini *mini, char *currpwd, t_parameters *parameters)
 	}
 	else
 	{
-		if (chdir(parameters->argv[1]) != 0)
+		if (mini->envnum != 0)
 		{
-			perror("Error changing to this directory\n");
-			mini->exit_status = 2;
+			temp = parameters->argv[1];
+			findenvvariable(&temp, mini, mini->envnum);
+			if (chdir(temp) != 0)
+			{
+				perror("Error changing to this directory\n");
+				mini->exit_status = 2;
+			}
+			else
+				execution_cd_success(mini, currpwd);
 		}
 		else
-			execution_cd_success(mini, currpwd);
+		{
+			// original
+			if (chdir(parameters->argv[1]) != 0)
+			{
+				perror("Error changing to this directory\n");
+				mini->exit_status = 2;
+			}
+			else
+				execution_cd_success(mini, currpwd);
+		}
 	}
 }
 
@@ -127,7 +152,7 @@ void	execute_cd(t_parameters *parameters, t_mini *mini)
 		printf("cd: Too many arguments\n");
 	else
 	{
-		if (parameters->argv[1][0] == '$')
+		if (parameters->argv[1][0] == '$' && mini->envnum == 1)
 			execute_cd_arg_env(envvariable, mini, currpwd, parameters);
 		else if (parameters->argv[1][0] == '~')
 			execute_cd_arg_tilde(envvariable, mini, currpwd, parameters);

@@ -112,6 +112,8 @@ void	exportstr(t_mini *mini)
 	{
 		perror("Thore is no = to split\n");
 		free(strs);
+		mini->exit_status = 1;
+		return ;
 	}
 	name = ft_calloc(ft_strlen(strs[0]) - ft_breakspace(strs[0]) + 1,
 			sizeof(char));

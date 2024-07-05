@@ -33,6 +33,10 @@ void	move_to_nextnode(t_linkedlist **node)
 	t_linkedlist	*newnode;
 
 	newnode = malloc(sizeof(t_linkedlist));
+	if (newnode == NULL)
+	{
+		perror("node malloc error\n");
+	}
 	newnode -> next = NULL;
 	(*node)->next = newnode;
 	(*node) = (*node)->next;

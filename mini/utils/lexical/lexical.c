@@ -94,6 +94,10 @@ t_linkedlist	*ft_breakup_str(char *str)
 	i = 0;
 	counter = 0;
 	head = malloc(sizeof(t_linkedlist));
+	if (head == NULL)
+	{
+		perror("malloc error\n");
+	}
 	head->next = NULL;
 	node = head;
 	while (str[i] != '\0')

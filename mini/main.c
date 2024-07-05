@@ -57,12 +57,16 @@ int	checkforexit(char *envp[])
 	node = NULL;
 	ast_node = NULL;
 	parameters = malloc(sizeof(t_parameters));
+	if (parameters == NULL)
+		perror("malloc error for parameters\n");
 	parameters->argv = NULL;
 	parameters->file_in = NULL;
 	parameters->file_out = NULL;
 	
 	// Allocate memory for t_mini and its components
 	mini = malloc(sizeof(t_mini));
+	if (mini == NULL)
+		perror("malloc error for parameters\n");
 	
 	mini->linkedlist = node;
 	mini->ast_node = ast_node;
@@ -75,7 +79,8 @@ int	checkforexit(char *envp[])
 	mini->prevpwd = NULL;
 	mini->str = NULL;
 	mini->exit_status = -1;
-
+	// mini->envnum = 0;
+	
 	// this set up mini
 	setupstruct(mini, envp);
 

@@ -25,6 +25,10 @@ struct s_AST_Node	*breakjob1(t_linkedlist *node)
 		return (NULL);
 	}
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
 	nodesettype(rootnode, NODE_PIPE);
 	nodesetdata(rootnode, NULL);
 	attachbinarybranch(rootnode, command_node, job_node);

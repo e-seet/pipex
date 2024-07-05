@@ -152,6 +152,9 @@ struct s_mini
 	int					envplen;
 	// exe result
 	int					exit_status;
+
+	// check the number of $. (basically how many env variable we expecting)
+	int					envnum;
 };
 typedef struct s_mini			t_mini;
 
@@ -226,6 +229,9 @@ void				move_to_nextnode(t_linkedlist **node);
 void				create_node(t_linkedlist **node,
 						char *str, int i, int strlen);
 void				free_linkedlist(t_linkedlist *node);
+
+//lexicalprocessing
+void				findenvvariable(char **src, t_mini *mini, int envnum);
 
 // top layers
 // parsing

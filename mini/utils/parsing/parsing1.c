@@ -27,6 +27,10 @@ struct s_AST_Node	*breakcommandline1(t_linkedlist *node)
 		return (NULL);
 	}
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
 	nodesettype(rootnode, NODE_SEQ);
 	nodesetdata(rootnode, NULL);
 	attachbinarybranch(rootnode, job_node, cmdline_node);
@@ -49,6 +53,10 @@ struct s_AST_Node	*breakcommandline2(t_linkedlist *node)
 		return (NULL);
 	}
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
 	nodesettype(rootnode, NODE_SEQ);
 	nodesetdata(rootnode, NULL);
 	attachbinarybranch(rootnode, job_node, NULL);

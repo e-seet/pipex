@@ -63,6 +63,10 @@ int	term(int type, char **buffer, t_linkedlist **node)
 		if (buffer != NULL)
 		{
 			*buffer = malloc(ft_strlen((*node)->data) + 1);
+			if (*buffer == NULL)
+			{
+				perror("rootnode malloc error\n");
+			}
 			ft_strlcpy(*buffer, (*node)->data, ft_strlen((*node)->data) + 1);
 		}
 		(*node) = (*node)->next;

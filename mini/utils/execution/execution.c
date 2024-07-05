@@ -81,6 +81,22 @@ void	executeprocess(t_parameters *parameters, int *pid, t_mini *mini)
 	}
 }
 
+
+// getting the string by joining
+// check for env variable and replace it
+void	execute_echo_prehandler(t_parameters *parameters, int *i, char **str, t_mini *mini)
+{
+	while (parameters->argv[*i])
+	{
+		(*str) = ft_strjoin((*str), parameters->argv[*i]);
+		(*i) ++;
+	}
+	if (mini->envp != 0)
+	{
+		findenvvariable(str, mini, mini->envnum);
+	}
+}
+
 // combine everything to a string
 // write to fd
 void	execute_echo(t_parameters *parameters, t_mini *mini)
@@ -93,11 +109,15 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 	i = 1;
 	if (ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
 		i = 2;
-	while (parameters->argv[i])
-	{
-		str = ft_strjoin(str, parameters->argv[i]);
-		i ++;
-	}
+	
+	execute_echo_prehandler(parameters, &i, &str, mini);
+	// while (parameters->argv[i])
+	// {
+	// 	str = ft_strjoin(str, parameters->argv[i]);
+	// 	i ++;
+	// }
+	
+	// write out
 	if (ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
 		ft_putstr_fd(str, STDOUT_FILENO);
 	else
@@ -105,6 +125,9 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 	mini->exit_status = 0;
 }
 
+// Check "$" variable in
+// 1. echo
+// 2. cd
 int	builtincommand(t_parameters *parameters, t_mini *mini)
 {
 	if (parameters->argc < 0)
@@ -156,8 +179,8 @@ int	builtincommand(t_parameters *parameters, t_mini *mini)
 		return (0);
 }
 
-// to decide if should add built in command before fork
 // to decide if need to add zombie handler after executeprocess
+// In executeprocess, to expand variable
 void	execution2(t_parameters *parameters, t_mini	*mini)
 {
 	pid_t	pid;

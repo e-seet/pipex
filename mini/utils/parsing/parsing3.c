@@ -23,6 +23,10 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node)
 		return (NULL);
 	}
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
 	nodesettype(rootnode, NODE_HEREDOC);
 	nodesetdata(rootnode, filename);
 	attachbinarybranch(rootnode, NULL, simplecommand_node);
@@ -52,6 +56,10 @@ struct s_AST_Node	*breakcommand2(t_linkedlist *node)
 		return (NULL);
 	}
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
 	nodesettype(rootnode, NODE_REDIRECT_IN);
 	nodesetdata(rootnode, filename);
 	attachbinarybranch(rootnode, NULL, simplecommand_node);
@@ -83,6 +91,10 @@ struct s_AST_Node	*breakcommand3(t_linkedlist *node)
 		return (NULL);
 	}
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
 	nodesettype(rootnode, NODE_REDIRECT);
 	nodesetdata(rootnode, filename);
 	attachbinarybranch(rootnode, NULL, simplecommand_node);
@@ -112,6 +124,10 @@ struct s_AST_Node	*breakcommand4(t_linkedlist *node)
 		return (NULL);
 	}
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
 	nodesettype(rootnode, NODE_REDIRECT_OUT);
 	nodesetdata(rootnode, filename);
 	attachbinarybranch(rootnode, NULL, simplecommand_node);

@@ -1,5 +1,8 @@
 #include "../utils.h"
 
+// check that there is a $ char
+// if so i mark it. 
+// Then proceed on stripping quotes
 void	strip_quotes2(char *src, char *dest, int srclen, int *envnum)
 {
 	int		i;
@@ -13,12 +16,12 @@ void	strip_quotes2(char *src, char *dest, int srclen, int *envnum)
 	while (srclen > i)
 	{
 		c = src[i];
+		if (c == '$')
+			*envnum = *envnum + 1;
 		if ((c == '\'' || c == '\"') && lastquote == 0)
 			lastquote = c;
 		else if (c == lastquote)
 			lastquote = 0;
-		else if (c == '$')
-			*envnum = *envnum + 1;
 		else
 			dest[j++] = c;
 		i++;
@@ -26,41 +29,56 @@ void	strip_quotes2(char *src, char *dest, int srclen, int *envnum)
 	dest[j] = '\0';
 }
 
-void	replace_to_env(char *src, char *dest, t_mini *mini)
+// if i found in envp, i replace.
+// EG: $HOME = /USERS/..
+// New: /USERS/..
+// otherwise i dont.
+void	replace_to_env(char *src, char **dest, t_mini *mini)
 {
 	int		i;
 
 	i = 0;
 	while (mini->envp[i])
 	{
-		if (ft_strncmp(mini->envp[i], &src[1], ft_strlen(mini->envp[i]) == 0))
+		if (ft_strncmp(mini->envp[i], &src[1], ft_strlen(src) - 1) == 0)
 		{
-			dest = ft_calloc(ft_strlen(mini->envp[i]) + 1, sizeof(char));
-			ft_strlcpy(dest, mini->envp[i], ft_strlen(mini->envp[i]));
+			*dest = ft_calloc(ft_strlen(mini->envp[i]) + 1, sizeof(char));
+			ft_strlcpy(*dest, &(mini->envp[i])[ft_strlen(src)-1], ft_strlen(mini->envp[i]) + 1);
 			break ;
 		}
 		i ++;
 	}
+	if (*dest == NULL)
+	{
+		*dest = ft_calloc(ft_strlen(src) + 1, sizeof(char));
+		ft_strlcpy(*dest, src, ft_strlen(src)+1);
+	}
 }
 
-void	findenvvariable(char *src, t_mini *mini, int envnum)
+// go through the argument
+// Basically, go through string,
+// check if it is end of string or $
+// replace it by overwriting if required
+void	findenvvariable(char **src, t_mini *mini, int envnum)
 {
 	int		i;
 	char	*newstr;
 
 	i = 0;
 	newstr = NULL;
-	while (src[i] != '\0')
+	while (*src[i] != '\0')
 	{
-		if (src[i] == '$')
+		if (*src[i] == '$')
 		{
-			replace_to_env(&src[i], newstr, mini);
-			free(src);
-			src = newstr;
+			replace_to_env(&(*src)[i], &newstr, mini);
+			free(*src);
+			*src = newstr;
 			envnum = envnum - 1;
 		}
 		if (envnum == 0)
+		{
 			break ;
+		}
 		i ++;
 	}
 }
@@ -69,7 +87,7 @@ void	findenvvariable(char *src, t_mini *mini, int envnum)
 // Check for $ while stripping
 // if it env variable exist,
 // replace it
-void	strip_quotes(char *src, char *dest, t_mini *mini)
+void	strip_quotes(char *src, char **dest, t_mini *mini)
 {
 	int				srclen;
 	int				envnum;
@@ -78,14 +96,15 @@ void	strip_quotes(char *src, char *dest, t_mini *mini)
 	srclen = ft_strlen(src);
 	if (srclen <= 1)
 	{
-		ft_strlcpy(dest, src, srclen);
+		ft_strlcpy(*dest, src, srclen);
 		return ;
 	}
-	strip_quotes2(src, dest, srclen, &envnum);
-	if (envnum != 0)
-	{
-		findenvvariable(dest, mini, envnum);
-	}
+	strip_quotes2(src, *dest, srclen, &envnum);
+	mini->envnum = envnum;
+	// if (envnum != 0)
+	// {
+		// findenvvariable(dest, mini, envnum);
+	// }
 }
 
 // process double and single quotes
@@ -99,7 +118,7 @@ void	lexicalprocess(t_linkedlist *original, t_mini *mini)
 	while (node != NULL)
 	{
 		strip = ft_calloc(ft_strlen(original->data) + 1, sizeof(char));
-		strip_quotes(node->data, strip, mini);
+		strip_quotes(node->data, &strip, mini);
 		free(node->data);
 		node->data = strip;
 		node = node -> next;

@@ -94,6 +94,10 @@ struct s_AST_Node	*simplecommand(t_linkedlist **node)
 	}
 	tokenlistnode = breaktokenlist(node);
 	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("malloc error\n");
+	}
 	nodesettype(rootnode, NODE_CMDPATH);
 	nodesetdata(rootnode, path);
 	attachbinarybranch(rootnode, NULL, tokenlistnode);
