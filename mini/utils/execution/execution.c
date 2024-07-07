@@ -97,6 +97,7 @@ void	execute_echo_prehandler(t_parameters *parameters, int *i, char **str, t_min
 	}
 }
 
+// echo alone will error. Need to find out where
 // combine everything to a string
 // write to fd
 void	execute_echo(t_parameters *parameters, t_mini *mini)
@@ -104,21 +105,22 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 	int		i;
 	char	*str;
 
+	// printf("argc:%d\n", parameters->argc);
+	// printf("echo\n");
 	str = calloc(1, sizeof(char));
 	str[0] = '\0';
-	i = 1;
-	if (ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
+	if (parameters->argc >= 1)
+		i = 1;
+	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
 		i = 2;
-	
 	execute_echo_prehandler(parameters, &i, &str, mini);
 	// while (parameters->argv[i])
 	// {
 	// 	str = ft_strjoin(str, parameters->argv[i]);
 	// 	i ++;
 	// }
-	
 	// write out
-	if (ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
+	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
 		ft_putstr_fd(str, STDOUT_FILENO);
 	else
 		ft_putstr_fd(ft_strjoin(str, "\n"), STDOUT_FILENO);
