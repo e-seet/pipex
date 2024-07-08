@@ -17,6 +17,7 @@ int	ft_breakspace(char *str)
 
 // Found the variable
 // update the envp accordingly
+// copy first half, then second half
 void	updateenvvariable_unset2(t_mini *mini, int *i)
 {
 	int		k;
@@ -26,18 +27,18 @@ void	updateenvvariable_unset2(t_mini *mini, int *i)
 	newenvp = ft_calloc(mini->envplen - 1, sizeof(char *));
 	while ((*i) > k)
 	{
-		newenvp[k] = ft_calloc(ft_strlen(mini->envp[k]), sizeof(char));
-		ft_strlcpy(newenvp[k], mini->envp[k], ft_strlen(mini->envp[k]));
+		newenvp[k] = ft_calloc(ft_strlen(mini->envp[k]) + 1, sizeof(char));
+		ft_strlcpy(newenvp[k], mini->envp[k], ft_strlen(mini->envp[k]) + 1);
 		free(mini->envp[k]);
 		k++;
 	}
 	free(mini->envp[k]);
-	while (mini->envplen > k)
+	while (mini->envplen - 1 > k)
 	{
 		newenvp[k] = ft_calloc(
-				ft_strlen(mini->envp[k + 1]), sizeof(char));
+				ft_strlen(mini->envp[k + 1]) + 1, sizeof(char));
 		ft_strlcpy(newenvp[k], mini->envp[k + 1],
-			ft_strlen(mini->envp[k + 1]));
+			ft_strlen(mini->envp[k + 1]) + 1);
 		free(mini->envp[k + 1]);
 		k++;
 	}
@@ -47,6 +48,7 @@ void	updateenvvariable_unset2(t_mini *mini, int *i)
 
 // remove from envp
 // if found , remove it and update envp
+// strs[1] is the key
 void	updateenvvariable_unset(t_mini *mini, char **strs)
 {
 	int		i;
@@ -59,7 +61,7 @@ void	updateenvvariable_unset(t_mini *mini, char **strs)
 	{
 		splits = ft_split(mini->envp[i], '=');
 		j = 0;
-		if (ft_strncmp(splits[0], strs[1], ft_strlen(strs[1])) == 0)
+		if (ft_strncmp(splits[0], strs[1], ft_strlen(strs[1])) == 0 && ft_strlen(strs[1]) == ft_strlen(splits[0]))
 		{
 			updateenvvariable_unset2(mini, &i);
 			break ;

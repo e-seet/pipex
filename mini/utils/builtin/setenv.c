@@ -1,4 +1,4 @@
-// to do: exit status for set and unset variables
+// to do: exit status for set and unset variables (done)
 #include "../utils.h"
 
 void	printenv(t_mini *mini)
@@ -39,26 +39,29 @@ void	updateenvvariable_set2(t_mini *mini, int *i, int *found, char **newenvp)
 {
 	char	**strs;
 	char	**strs2;
+	char	**strs3;
 
 	strs2 = ft_split(mini->str, ' ');
+	strs3 = ft_split(strs2[1], '=');
 	while (mini->envplen > (*i))
 	{
 		strs = ft_split(mini->envp[(*i)], '=');
-		if (ft_strncmp(strs[1], strs2[1], ft_strlen(strs2[1])))
+
+		if (strs[1] != NULL && (ft_strncmp(strs[0], strs3[0], ft_strlen(strs3[0])) == 0 && ft_strlen(strs3[0]) == ft_strlen(strs[0])) && *found != 1)
 		{
 			(*found) = 1;
-			newenvp[(*i)] = ft_calloc(ft_strlen(strs2[1]), sizeof(char));
-			ft_strlcpy(newenvp[(*i)], strs2[1], ft_strlen(strs2[1]));
+			newenvp[(*i)] = ft_calloc(ft_strlen(strs2[1]) + 1, sizeof(char));
+			ft_strlcpy(newenvp[(*i)], strs2[1], ft_strlen(strs2[1]) + 1);
 		}
 		else
 		{
-			newenvp[(*i)] = ft_calloc(ft_strlen(mini->envp[(*i)]),
+			newenvp[(*i)] = ft_calloc(ft_strlen(mini->envp[(*i)]) + 1,
 					sizeof(char));
 			ft_strlcpy(newenvp[(*i)], mini->envp[(*i)],
-				ft_strlen(mini->envp[(*i)]));
+				ft_strlen(mini->envp[(*i)]) + 1);
 		}
 		free(mini->envp[(*i)]);
-		i++;
+		(*i)++;
 	}
 }
 
@@ -72,14 +75,14 @@ void	updateenvvariable_set(t_mini *mini, char *str)
 	int		i;
 
 	strs2 = ft_split(str, ' ');
-	newenvp = ft_calloc(mini->envplen + 1, sizeof(char *));
+	newenvp = ft_calloc(mini->envplen + 2, sizeof(char *));
 	i = 0;
 	found = 0;
 	updateenvvariable_set2(mini, &i, &found, newenvp);
 	if (found != 1)
 	{
-		newenvp[i] = ft_calloc(ft_strlen(strs2[1]), sizeof(char));
-		ft_strlcpy(newenvp[i], strs2[1], ft_strlen(strs2[1]));
+		newenvp[i] = ft_calloc(ft_strlen(strs2[1]) + 1, sizeof(char));
+		ft_strlcpy(newenvp[i], strs2[1], ft_strlen(strs2[1]) + 1);
 		mini->envplen = mini->envplen + 1;
 	}
 	mini->envp = newenvp;
@@ -103,7 +106,7 @@ void	updateenvvariable_set(t_mini *mini, char *str)
 void	exportstr(t_mini *mini)
 {
 	char	**strs;
-	char	*name;
+	// char	*name;
 	char	*str;
 
 	str = mini -> str;
@@ -115,11 +118,11 @@ void	exportstr(t_mini *mini)
 		mini->exit_status = 1;
 		return ;
 	}
-	name = ft_calloc(ft_strlen(strs[0]) - ft_breakspace(strs[0]) + 1,
-			sizeof(char));
-	ft_strlcpy(name, &str[ft_breakspace(strs[0])],
-		ft_strlen(strs[0]) - ft_breakspace(strs[0]));
-	free(name);
+	// name = ft_calloc(ft_strlen(strs[0]) - ft_breakspace(strs[0]) + 1,
+	// 		sizeof(char));
+	// ft_strlcpy(name, &str[ft_breakspace(strs[0])],
+	// 	ft_strlen(strs[0]) - ft_breakspace(strs[0]));
+	// free(name);
 	free(strs);
 	updateenvvariable_set(mini, str);
 }
