@@ -56,18 +56,20 @@ int	checkforexit(char *envp[])
 	str = NULL;
 	node = NULL;
 	ast_node = NULL;
-	parameters = malloc(sizeof(t_parameters));
-	if (parameters == NULL)
-		perror("malloc error for parameters\n");
-	parameters->argv = NULL;
-	parameters->file_in = NULL;
-	parameters->file_out = NULL;
 	
 	// Allocate memory for t_mini and its components
 	mini = malloc(sizeof(t_mini));
 	if (mini == NULL)
-		perror("malloc error for parameters\n");
+		memoryerror(mini);
+
+	parameters = malloc(sizeof(t_parameters));
+	if (parameters == NULL)
+		memoryerror(mini);
+	parameters->argv = NULL;
+	parameters->file_in = NULL;
+	parameters->file_out = NULL;
 	
+
 	mini->linkedlist = node;
 	mini->ast_node = ast_node;
 	mini->parameters = parameters;
@@ -80,6 +82,7 @@ int	checkforexit(char *envp[])
 	mini->str = NULL;
 	mini->exit_status = -1;
 	// mini->envnum = 0;
+	
 	
 	// this set up mini
 	setupstruct(mini, envp);
@@ -129,19 +132,12 @@ int	checkforexit(char *envp[])
 		}
 
 		// To do: Check the first 2
-        // if (strcmp(str, "clear") == 0)
-		// {
-        //     // Clear the screen if the command 'clear' is entered
-        //     // rl_replace_line("", 0); // Clear the readline line buffer
-        //     // system("clear"); // Use system call to clear the terminal screen // Check if this is allowed
-        // }
+        
 		// not using this if statement??
 		if (strcmp(str, "reset_hist") == 0)
 		{
             // Reset the history if 'reset_hist' command is entered
-			// clearhistory();
 			rl_clear_history();
-
             printf("History cleared.\n");
         }
 		else
@@ -238,9 +234,6 @@ int	checkforexit(char *envp[])
         
         free(str); // Free the input string allocated by readline
 	}
-
-	// clear the history
-	// clearhistory();
 	rl_clear_history();
 
 	return (0);

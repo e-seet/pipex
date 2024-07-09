@@ -26,6 +26,8 @@ void	envvariables(t_mini *mini, char *envp[])
 	while (i > temp)
 	{
 		mini->envp[temp] = ft_calloc(ft_strlen(envp[temp]) + 10, sizeof(char));
+		if (mini->envp[temp] == NULL)
+			return memoryerror(mini);
 		ft_strlcpy(mini->envp[temp], envp[temp], ft_strlen(envp[temp]) + 1);
 		temp ++;
 	}
@@ -51,12 +53,16 @@ void	updateenvvariable_set2(t_mini *mini, int *i, int *found, char **newenvp)
 		{
 			(*found) = 1;
 			newenvp[(*i)] = ft_calloc(ft_strlen(strs2[1]) + 1, sizeof(char));
+			if (newenvp[*i] == NULL)
+				return memoryerror(mini);
 			ft_strlcpy(newenvp[(*i)], strs2[1], ft_strlen(strs2[1]) + 1);
 		}
 		else
 		{
 			newenvp[(*i)] = ft_calloc(ft_strlen(mini->envp[(*i)]) + 1,
 					sizeof(char));
+			if (newenvp[*i] == NULL)
+				return memoryerror(mini);
 			ft_strlcpy(newenvp[(*i)], mini->envp[(*i)],
 				ft_strlen(mini->envp[(*i)]) + 1);
 		}
@@ -76,12 +82,16 @@ void	updateenvvariable_set(t_mini *mini, char *str)
 
 	strs2 = ft_split(str, ' ');
 	newenvp = ft_calloc(mini->envplen + 2, sizeof(char *));
+	if (newenvp == NULL)
+		return memoryerror(mini);
 	i = 0;
 	found = 0;
 	updateenvvariable_set2(mini, &i, &found, newenvp);
 	if (found != 1)
 	{
 		newenvp[i] = ft_calloc(ft_strlen(strs2[1]) + 1, sizeof(char));
+		if (newenvp[i] == NULL)
+			return memoryerror(mini);
 		ft_strlcpy(newenvp[i], strs2[1], ft_strlen(strs2[1]) + 1);
 		mini->envplen = mini->envplen + 1;
 	}

@@ -1,5 +1,7 @@
 #include "../utils.h"
 
+// To do: Clean up memory issues for lexical along with lexical utils3.
+
 // (cd .. && pwd) && pwd >> file
 // Check for sepeartor, if found. Add to list.
 // > : ft_is_output_redirect
@@ -15,13 +17,13 @@
 // ^ type: token
 // ^ type: Char INT
 
-void	ft_breakup_str4(char *str, int *i, t_linkedlist **node, int *counter)
+void	ft_breakup_str4(char *str, int *i, t_mini *mini, int *counter)
 {
 	if (ft_is_whitespaces(&str[(*i)]) == 1)
 	{
 		if ((*counter) > 0)
 		{
-			create_node(node, str, (*i), (*counter));
+			create_node(mini, str, (*i), (*counter));
 			(*counter) = 0;
 		}
 		(*i)++;
@@ -34,7 +36,7 @@ void	ft_breakup_str4(char *str, int *i, t_linkedlist **node, int *counter)
 }
 
 // > or < or |
-void	ft_breakup_str3(char *str, int *i, t_linkedlist **node, int *counter)
+void	ft_breakup_str3(char *str, int *i, t_mini *mini, int *counter)
 {
 	if (
 		(ft_is_output_redirect(&str[(*i)]) == 1)
@@ -44,23 +46,23 @@ void	ft_breakup_str3(char *str, int *i, t_linkedlist **node, int *counter)
 	{
 		if ((*counter) > 0)
 		{
-			create_node(node, str, (*i), (*counter));
-			create_node(node, str, (*i) + 1, 1);
+			create_node(mini, str, (*i), (*counter));
+			create_node(mini, str, (*i) + 1, 1);
 			(*counter) = 0;
 		}
 		else
 		{
-			create_node(node, str, (*i) + 1, 1);
+			create_node(mini, str, (*i) + 1, 1);
 		}
 		(*i)++;
 	}
 	else
 	{
-		ft_breakup_str4(str, i, node, counter);
+		ft_breakup_str4(str, i, mini, counter);
 	}
 }
 
-void	ft_breakup_str2(char *str, int *i, t_linkedlist **node, int *counter)
+void	ft_breakup_str2(char *str, int *i, t_mini *mini, int *counter)
 {
 	if (
 		(ft_is_append_output_redirect(&str[(*i)]) == 1)
@@ -69,22 +71,22 @@ void	ft_breakup_str2(char *str, int *i, t_linkedlist **node, int *counter)
 	{
 		if ((*counter) > 0)
 		{
-			create_node(node, str, (*i), (*counter));
-			create_node(node, str, (*i) + 2, 2);
+			create_node(mini, str, (*i), (*counter));
+			create_node(mini, str, (*i) + 2, 2);
 			(*counter) = 0;
 		}
 		else
 		{
-			create_node(node, str, (*i) + 2, 2);
+			create_node(mini, str, (*i) + 2, 2);
 		}
 		(*i) = (*i) + 2;
 	}
 	else
-		ft_breakup_str3(str, i, node, counter);
+		ft_breakup_str3(str, i, mini, counter);
 }
 
 // >> or << 
-t_linkedlist	*ft_breakup_str(char *str)
+t_linkedlist	*ft_breakup_str(char *str, t_mini *mini)
 {
 	int				i;
 	int				counter;
@@ -95,17 +97,16 @@ t_linkedlist	*ft_breakup_str(char *str)
 	counter = 0;
 	head = malloc(sizeof(t_linkedlist));
 	if (head == NULL)
-	{
-		perror("malloc error\n");
-	}
+		memoryerror(mini);
 	head->next = NULL;
 	node = head;
+	mini->linkedlist = node;
 	while (str[i] != '\0')
 	{
-		ft_breakup_str2(str, &i, &node, &counter);
+		ft_breakup_str2(str, &i, mini, &counter);
 	}
 	if (counter > 0)
-		create_node(&node, str, i, counter);
+		create_node(mini, str, i, counter);
 	return (head);
 }
 
@@ -113,7 +114,7 @@ t_linkedlist	*lexical(char *str, t_mini *mini)
 {
 	t_linkedlist	*node;
 
-	node = ft_breakup_str(str);
+	node = ft_breakup_str(str, mini);
 	lexicalprocess(node, mini);
 	return (node);
 }

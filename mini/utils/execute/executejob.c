@@ -42,7 +42,7 @@ void	heredocinput(char *input,
 	}
 }
 
-void	prepheredoc(struct s_AST_Node **rootnode)
+void	prepheredoc(struct s_AST_Node **rootnode, t_mini *mini)
 {
 	int		heredocwritefd;
 	char	*input;
@@ -61,6 +61,8 @@ void	prepheredoc(struct s_AST_Node **rootnode)
 	if (input != NULL)
 		free(input);
 	filein = ft_calloc(16, sizeof(char));
+	if (filein == NULL)
+		return memoryerror(mini);
 	ft_strlcpy(filein, "heredoctemp.txt", ft_strlen("heredoctemp.txt") + 1);
 	nodesetdata(*rootnode, filein);
 }
@@ -77,7 +79,7 @@ void	execute_job(struct s_AST_Node **rootnode,
 		execute_pipe((rootnode), async, parameters, mini);
 	else if (nodetype((*rootnode)->type) == NODE_HEREDOC)
 	{
-		prepheredoc(rootnode);
+		prepheredoc(rootnode, mini);
 		if (sigint_received == -1)
 			return ;
 		parameters->readpipe = 0;

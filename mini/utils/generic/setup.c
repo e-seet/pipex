@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "../utils.h"
 
 // find the long long path in envp.
 // returns a long string of paths
@@ -37,7 +37,9 @@ void setupstruct(t_mini *mini, char *envp[])
 	{
 		i++;
 	}
-	mini->envp = ft_calloc(i+1, sizeof(char *));
+	mini->envp = ft_calloc(i + 1, sizeof(char *));
+	if (mini->envp == NULL)
+		return memoryerror(mini);
 	i--;
 	mini->envplen = i;
 	// we set up the env variables here. 

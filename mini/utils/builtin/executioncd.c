@@ -145,6 +145,8 @@ void	execute_cd(t_parameters *parameters, t_mini *mini)
 
 	envvariable = NULL;
 	currpwd = ft_calloc(4096, sizeof(char));
+	if (currpwd == NULL)
+		return memoryerror(mini);
 	currpwd = getcwd(currpwd, 4096);
 	if (parameters->argc == 1)
 		execute_cd_argc1(envvariable, mini, currpwd);

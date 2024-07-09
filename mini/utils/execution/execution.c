@@ -108,6 +108,8 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 	// printf("argc:%d\n", parameters->argc);
 	// printf("echo\n");
 	str = calloc(1, sizeof(char));
+	if (str == NULL)
+		return memoryerror(mini);
 	str[0] = '\0';
 	if (parameters->argc >= 1)
 		i = 1;

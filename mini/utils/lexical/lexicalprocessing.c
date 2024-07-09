@@ -43,7 +43,10 @@ void	replace_to_env(char *src, char **dest, t_mini *mini)
 		if (ft_strncmp(mini->envp[i], &src[1], ft_strlen(src) - 1) == 0)
 		{
 			*dest = ft_calloc(ft_strlen(mini->envp[i]) + 1, sizeof(char));
-			ft_strlcpy(*dest, &(mini->envp[i])[ft_strlen(src)-1], ft_strlen(mini->envp[i]) + 1);
+			if (*dest == NULL)
+				return (memoryerror(mini));
+			ft_strlcpy(*dest, &(mini->envp[i])[ft_strlen(src) - 1],
+				ft_strlen(mini->envp[i]) + 1);
 			break ;
 		}
 		i ++;
@@ -51,7 +54,9 @@ void	replace_to_env(char *src, char **dest, t_mini *mini)
 	if (*dest == NULL)
 	{
 		*dest = ft_calloc(ft_strlen(src) + 1, sizeof(char));
-		ft_strlcpy(*dest, src, ft_strlen(src)+1);
+		if (*dest == NULL)
+			return (memoryerror(mini));
+		ft_strlcpy(*dest, src, ft_strlen(src) + 1);
 	}
 }
 
@@ -101,10 +106,6 @@ void	strip_quotes(char *src, char **dest, t_mini *mini)
 	}
 	strip_quotes2(src, *dest, srclen, &envnum);
 	mini->envnum = envnum;
-	// if (envnum != 0)
-	// {
-		// findenvvariable(dest, mini, envnum);
-	// }
 }
 
 // process double and single quotes
@@ -118,6 +119,8 @@ void	lexicalprocess(t_linkedlist *original, t_mini *mini)
 	while (node != NULL)
 	{
 		strip = ft_calloc(ft_strlen(original->data) + 1, sizeof(char));
+		if (strip == NULL)
+			perror("memory allocation failed\n");
 		strip_quotes(node->data, &strip, mini);
 		free(node->data);
 		node->data = strip;

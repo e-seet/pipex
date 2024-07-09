@@ -65,6 +65,8 @@ void	execute_pwd(t_parameters *parameters, t_mini *mini)
 
 	fd = 0;
 	cwd = ft_calloc(4096, sizeof(char));
+	if (cwd == NULL)
+		return (memoryerror(mini));
 	pid = fork();
 	if (pid == 0)
 	{
@@ -113,7 +115,7 @@ void	execute_pwd(t_parameters *parameters, t_mini *mini)
 // 	}
 // 	else if (ft_strncmp(str, "cd ~", ft_strlen("cd ~") == 0))
 // 	{
-// 		// To do
+// 	
 // 		// tilde as a shortcut to home directory
 // 		// cd ~/Document
 // 	}

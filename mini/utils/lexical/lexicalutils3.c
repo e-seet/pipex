@@ -28,26 +28,36 @@ int	returnint(char *str, int i)
 		return (TOKEN);
 }
 
-void	move_to_nextnode(t_linkedlist **node)
+void	move_to_nextnode(t_mini *mini, int strlen, char *str, int i)
 {
 	t_linkedlist	*newnode;
+	int				start;
+	t_linkedlist	**node;
 
+	node = &(mini->linkedlist);
+	start = 0;
+	while (strlen > start)
+	{
+		(*node)->data[start] = str[(i) + start];
+		start ++;
+	}
 	newnode = malloc(sizeof(t_linkedlist));
 	if (newnode == NULL)
-	{
-		perror("node malloc error\n");
-	}
+		return (memoryerror(mini));
 	newnode -> next = NULL;
 	(*node)->next = newnode;
 	(*node) = (*node)->next;
 }
 
-void	create_node(t_linkedlist **node, char *str, int i, int strlen)
+// void	create_node(t_linkedlist **node, char *str, int i, int strlen)
+void	create_node(t_mini *mini, char *str, int i, int strlen)
 {
-	int		start;
+	t_linkedlist	**node;
 
-	start = 0;
+	node = &(mini->linkedlist);
 	(*node)->data = ft_calloc(strlen + 1, sizeof(char));
+	if ((*node)->data == NULL)
+		perror("Memory allocation failed\n");
 	(*node)->data[strlen + 1] = '\0';
 	i = i - strlen;
 	if
@@ -61,13 +71,7 @@ void	create_node(t_linkedlist **node, char *str, int i, int strlen)
 		(*node)->type = returnint(str, i);
 	else
 		(*node)->type = TOKEN;
-	while (strlen > start)
-	{
-		(*node)->data[start] = str[(i) + start];
-		start ++;
-	}
-	// printf("the data:%s, %p\n", (*node)->data, (*node));
-	move_to_nextnode(node);
+	move_to_nextnode(mini, strlen, str, i);
 }
 
 void	free_linkedlist(t_linkedlist *node)

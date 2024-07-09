@@ -28,6 +28,8 @@ void	updateenvvariable_unset2(t_mini *mini, int *i)
 	while ((*i) > k)
 	{
 		newenvp[k] = ft_calloc(ft_strlen(mini->envp[k]) + 1, sizeof(char));
+		if (newenvp[k] == NULL)
+			memoryerror(mini);
 		ft_strlcpy(newenvp[k], mini->envp[k], ft_strlen(mini->envp[k]) + 1);
 		free(mini->envp[k]);
 		k++;
@@ -37,6 +39,8 @@ void	updateenvvariable_unset2(t_mini *mini, int *i)
 	{
 		newenvp[k] = ft_calloc(
 				ft_strlen(mini->envp[k + 1]) + 1, sizeof(char));
+		if (newenvp[k] == NULL)
+			memoryerror(mini);
 		ft_strlcpy(newenvp[k], mini->envp[k + 1],
 			ft_strlen(mini->envp[k + 1]) + 1);
 		free(mini->envp[k + 1]);

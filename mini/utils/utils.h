@@ -188,6 +188,9 @@ void				setupstruct(t_mini *t_minishell, char *envp[]);
 char				*findpath(char *envp[]);
 char				*findprocesspath(t_mini *mini, t_parameters *parameters);
 
+// utils.c
+void				memoryerror(t_mini *mini);
+
 // setenv.c
 // initial
 void				printenv(t_mini *mini);
@@ -225,9 +228,14 @@ int					ft_is_double_quote(char *str);
 // lexicalutils3
 int					ft_is_dollar(char *str);
 int					returnint(char *str, int i);
-void				move_to_nextnode(t_linkedlist **node);
-void				create_node(t_linkedlist **node,
+// void				move_to_nextnode(t_linkedlist **node);
+// void				create_node(t_linkedlist **node,
+// 						char *str, int i, int strlen);
+void				move_to_nextnode(t_mini *mini, int strlen, char *str, int i);
+
+void				create_node(t_mini *mini,
 						char *str, int i, int strlen);
+
 void				free_linkedlist(t_linkedlist *node);
 
 //lexicalprocessing
@@ -287,7 +295,7 @@ int					term(int type, char **buffer, t_linkedlist **node);
 int					linechecker(char *str);
 void				heredocinput(char *input,
 						struct s_AST_Node **rootnode, int heredocwritefd);
-void				prepheredoc(struct s_AST_Node **rootnode);
+void				prepheredoc(struct s_AST_Node **rootnode, t_mini *mini);
 void				execute_job(struct s_AST_Node **rootnode,
 						int async, t_parameters *parameters,
 						t_mini *mini);

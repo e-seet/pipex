@@ -14,7 +14,8 @@ CFLAGS := -Wall -Wextra -Werror -I/opt/homebrew/opt/readline/include
 # Source
 # **************************************************************************** #
 SRC_FILES			:=	main.c	\
-						./utils/setup.c\
+						./utils/generic/setup.c\
+						./utils/generic/utils.c\
 						./utils/lexical/lexical.c	\
 						./utils/lexical/lexicalprocessing.c	\
 						./utils/lexical/lexicalutils1.c	./utils/lexical/lexicalutils2.c	./utils/lexical/lexicalutils3.c \
