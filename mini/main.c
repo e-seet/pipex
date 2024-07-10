@@ -200,7 +200,7 @@ int	checkforexit(char *envp[])
 				// // pass the linked list into the parser
 
 				// printf("parsing\n");
-				ast_node = breakcommandline(node);
+				ast_node = breakcommandline(node, mini);
 
 				// printf("execution\n");
 				execute_syntax_tree(ast_node, parameters, mini);

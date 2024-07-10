@@ -1,6 +1,32 @@
 #include "../utils.h"
 
-struct s_AST_Node	*tokenlist1(t_linkedlist **node)
+// first term is diff
+// second term is same
+struct s_AST_Node	*breakcommand_node(
+	t_linkedlist *node, t_mini *mini,
+	int termval, char *filename
+	)
+{
+	struct s_AST_Node	*simplecommand_node;
+
+	simplecommand_node = simplecommand(&node, mini);
+	if (simplecommand_node == NULL)
+		return (NULL);
+	if (!term(termval, NULL, &node))
+	{
+		nodedelete(simplecommand_node);
+		return (NULL);
+	}
+	if (!term(TOKEN, &filename, &node))
+	{
+		nodedelete(simplecommand_node);
+		free(filename);
+		return (NULL);
+	}
+	return (simplecommand_node);
+}
+
+struct s_AST_Node	*tokenlist1(t_linkedlist **node, t_mini *mini)
 {
 	struct s_AST_Node	*tokenlistnode;
 	struct s_AST_Node	*rootnode;
@@ -10,11 +36,12 @@ struct s_AST_Node	*tokenlist1(t_linkedlist **node)
 	{
 		return (NULL);
 	}
-	tokenlistnode = breaktokenlist(node);
+	tokenlistnode = breaktokenlist(node, mini);
 	rootnode = malloc(sizeof(struct s_AST_Node));
 	if (rootnode == NULL)
 	{
-		perror("rootnode malloc error\n");
+		memoryerror(mini);
+		return (NULL);
 	}
 	nodesettype(rootnode, NODE_ARGUMENT);
 	nodesetdata(rootnode, arg);

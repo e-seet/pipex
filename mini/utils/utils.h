@@ -169,17 +169,32 @@ typedef struct s_mini			t_mini;
 // ENOMEM (12): Out of memory.
 // EIO (5): Input/output error.
 // EISDIR (21): Is a directory (attempting to execute a directory).
-// EINVAL (22): Invalid argument (typically indicates a problem with the executable format or other arguments).
+// EINVAL (22): Invalid argument (typically 
+// indicates a problem with the executable format or other arguments).
 
 // $? numbers:
-// 0: Successful completion. Indicates that the command or script executed without errors.
-// 1: General error. This exit status is often used to indicate that a command or script encountered an unspecified error condition.
+// 0: Successful completion. 
+// Indicates that the command or script executed without errors.
+
+// 1: General error. This exit status is often used to indicate that 
+// a command or script encountered an unspecified error condition.
+
 // 2: Misuse of shell builtins (for example, incorrect syntax).
-// 126: Command invoked cannot execute. This typically indicates a permission problem or a non-executable file being attempted to execute.
-// 127: Command not found. Indicates that the command invoked was not found in the search path or is not executable.
-// 128: Invalid argument to exit. This indicates that the exit command was used incorrectly.
-// 130: Script terminated by Control-C. This is the exit status returned when a script is terminated by the user pressing Ctrl+C.
-// 255: Exit status out of range. Indicates that the command or script encountered an exit status that was outside the allowable range of 0-255.
+// 126: Command invoked cannot execute. This typically indicates a permission 
+// problem or a non-executable file being attempted to execute.
+
+// 127: Command not found. Indicates that the command invoked was not found
+//  in the search path or is not executable.
+
+// 128: Invalid argument to exit. This indicates that the exit command 
+// was used incorrectly.
+
+// 130: Script terminated by Control-C. This is the exit status returned when a 
+// script is terminated by the user pressing Ctrl+C.
+
+// 255: Exit status out of range. Indicates that the command or 
+// script encountered an exit status that was outside the 
+// allowable range of 0-255.
 
 // functions
 
@@ -231,7 +246,8 @@ int					returnint(char *str, int i);
 // void				move_to_nextnode(t_linkedlist **node);
 // void				create_node(t_linkedlist **node,
 // 						char *str, int i, int strlen);
-void				move_to_nextnode(t_mini *mini, int strlen, char *str, int i);
+void				move_to_nextnode(t_mini *mini, int strlen,
+						char *str, int i);
 
 void				create_node(t_mini *mini,
 						char *str, int i, int strlen);
@@ -243,42 +259,45 @@ void				findenvvariable(char **src, t_mini *mini, int envnum);
 
 // top layers
 // parsing
-struct s_AST_Node	*breakcommandline(t_linkedlist *node);
-struct s_AST_Node	*breakjob(t_linkedlist *node);
-struct s_AST_Node	*breakcommand(t_linkedlist *node);
-struct s_AST_Node	*simplecommand(t_linkedlist **node);
+struct s_AST_Node	*breakcommandline(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*simplecommand(t_linkedlist **node, t_mini *mini);
 
 // breakcommandline in parsing1
-struct s_AST_Node	*breakcommandline1(t_linkedlist *node);
-struct s_AST_Node	*breakcommandline2(t_linkedlist *node);
-struct s_AST_Node	*breakcommandline3(t_linkedlist *node);
+struct s_AST_Node	*breakcommandline1(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommandline2(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommandline3(t_linkedlist *node, t_mini *mini);
 
 // break job in parsing2
-struct s_AST_Node	*breakjob1(t_linkedlist *node);
-struct s_AST_Node	*breakjob2(t_linkedlist *node);
+struct s_AST_Node	*breakjob1(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakjob2(t_linkedlist *node, t_mini *mini);
 
 // parsing3.c
 // <<
-struct s_AST_Node	*breakcommand1(t_linkedlist *node);
+struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini);
 // <
-struct s_AST_Node	*breakcommand2(t_linkedlist *node);
+struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini);
 //>>
-struct s_AST_Node	*breakcommand3(t_linkedlist *node);
+struct s_AST_Node	*breakcommand3(t_linkedlist *node, t_mini *mini);
 //>
-struct s_AST_Node	*breakcommand4(t_linkedlist *node);
-struct s_AST_Node	*breakcommand5(t_linkedlist *node);
+struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand5(t_linkedlist *node, t_mini *mini);
+
+struct s_AST_Node	*breakcommand_node(t_linkedlist *node, t_mini *mini,
+						int termval, char *filename);
 
 // parsing4.c
-struct s_AST_Node	*breaktokenlist(t_linkedlist **node);
-struct s_AST_Node	*tokenlist1(t_linkedlist **node);
+struct s_AST_Node	*breaktokenlist(t_linkedlist **node, t_mini *mini);
+struct s_AST_Node	*tokenlist1(t_linkedlist **node, t_mini *mini);
 struct	s_AST_Node	*tokenlist2(void);
 
 // parsingutils
-struct s_AST_Node	*breakcommandline(t_linkedlist *token);
-struct s_AST_Node	*breakjob(t_linkedlist *token);
-struct s_AST_Node	*breakcommand(t_linkedlist *token);
-struct s_AST_Node	*simplecommand(t_linkedlist **token);
-struct s_AST_Node	*breaktokenlist(t_linkedlist **token);
+// struct s_AST_Node	*breakcommandline(t_linkedlist *token, t_mini *mini);
+// struct s_AST_Node	*breakjob(t_linkedlist *token, t_mini *mini);
+// struct s_AST_Node	*breakcommand(t_linkedlist *token);
+// struct s_AST_Node	*simplecommand(t_linkedlist **token);
+// struct s_AST_Node	*breaktokenlist(t_linkedlist **token);
 
 // parsing utils
 // void				free_ast(struct s_AST_Node *rootnode);
