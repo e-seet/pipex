@@ -114,6 +114,9 @@ t_linkedlist	*lexical(char *str, t_mini *mini)
 {
 	t_linkedlist	*node;
 
+	node = NULL;
+	if (str == NULL || ft_strlen(str) == 0)
+		return NULL;
 	node = ft_breakup_str(str, mini);
 	lexicalprocess(node, mini);
 	return (node);

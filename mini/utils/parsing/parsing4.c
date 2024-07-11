@@ -4,7 +4,7 @@
 // second term is same
 struct s_AST_Node	*breakcommand_node(
 	t_linkedlist *node, t_mini *mini,
-	int termval, char *filename
+	int termval, char **filename
 	)
 {
 	struct s_AST_Node	*simplecommand_node;
@@ -17,10 +17,10 @@ struct s_AST_Node	*breakcommand_node(
 		nodedelete(simplecommand_node);
 		return (NULL);
 	}
-	if (!term(TOKEN, &filename, &node))
+	if (!term(TOKEN, filename, &node))
 	{
 		nodedelete(simplecommand_node);
-		free(filename);
+		free(*filename);
 		return (NULL);
 	}
 	return (simplecommand_node);

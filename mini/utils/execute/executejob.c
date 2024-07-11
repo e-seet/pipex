@@ -31,12 +31,13 @@ void	heredocinput(char *input,
 								(*rootnode)->data)) == 0) && (strlen(input)
 						- linechecker(input)) == strlen((*rootnode)->data)))
 			{
+				free(input);
 				break ;
 			}
 			write(heredocwritefd, input, ft_strlen(input));
 			free(input);
 			input = NULL;
-			// add_history(input);
+			add_history(input);
 		}
 		free(input);
 	}

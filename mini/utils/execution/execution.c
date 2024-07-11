@@ -81,15 +81,15 @@ void	executeprocess(t_parameters *parameters, int *pid, t_mini *mini)
 	}
 }
 
-
 // getting the string by joining
 // check for env variable and replace it
-void	execute_echo_prehandler(t_parameters *parameters, int *i, char **str, t_mini *mini)
+void	execute_echo_prehandler(t_parameters *parameters, int *i,
+	char **str, t_mini *mini)
 {
 	while (parameters->argv[*i])
 	{
 		(*str) = ft_strjoin((*str), parameters->argv[*i]);
-		(*i) ++;
+		(*i)++;
 	}
 	if (mini->envp != 0)
 	{
@@ -100,32 +100,50 @@ void	execute_echo_prehandler(t_parameters *parameters, int *i, char **str, t_min
 // echo alone will error. Need to find out where
 // combine everything to a string
 // write to fd
+// Restore the original standard output at the end
+
+// current issue: << works but i am not getting the file out.
+// need to look into logic
 void	execute_echo(t_parameters *parameters, t_mini *mini)
 {
 	int		i;
 	char	*str;
+	int		stdoutfd;
 
-	// printf("argc:%d\n", parameters->argc);
-	// printf("echo\n");
+	printf("execute echo!\n");
 	str = calloc(1, sizeof(char));
 	if (str == NULL)
-		return memoryerror(mini);
+		return (memoryerror(mini));
 	str[0] = '\0';
 	if (parameters->argc >= 1)
 		i = 1;
-	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
+	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1],
+			"-n", ft_strlen("-n")) == 0)
 		i = 2;
+	stdoutfd = dup(STDOUT_FILENO);
 	execute_echo_prehandler(parameters, &i, &str, mini);
-	// while (parameters->argv[i])
-	// {
-	// 	str = ft_strjoin(str, parameters->argv[i]);
-	// 	i ++;
-	// }
-	// write out
-	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1], "-n", ft_strlen("-n")) == 0)
+	printf("the str:%s\n", str);
+	printf("check argv\n");
+	int x = 0;
+	while (parameters->argv[x])
+	{
+		printf("argv %d: %s\n", x, parameters->argv[x]);
+		x++;
+	}
+	printf("file in: %s\n", parameters->file_in);
+	printf("file out: %s\n", parameters->file_out);
+
+	redirection(parameters);
+	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1],
+			"-n", ft_strlen("-n")) == 0)
 		ft_putstr_fd(str, STDOUT_FILENO);
 	else
 		ft_putstr_fd(ft_strjoin(str, "\n"), STDOUT_FILENO);
+	if (dup2(stdoutfd, STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		mini->exit_status = 1;
+	}
 	mini->exit_status = 0;
 }
 

@@ -89,7 +89,10 @@ void	free_linkedlist(t_linkedlist *node)
 			free(prevnode);
 			prevnode = NULL;
 		}
-		free(prevnode);
-		prevnode = NULL;
+		if (prevnode != NULL)
+		{
+			free(prevnode);
+			prevnode = NULL;
+		}
 	}
 }

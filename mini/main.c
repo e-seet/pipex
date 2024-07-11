@@ -20,10 +20,13 @@ void	free_arraypointers(char **strs)
 // free parameters(parameters);
 void	free_mini(t_mini *mini)
 {
+	printf("\nfree mini: Linkedlist\n");
 	if (mini->linkedlist)
 		free_linkedlist(mini->linkedlist);
+	printf("free ast\n");
 	if (mini->ast_node)
 		free_ast(&mini->ast_node, mini->ast_node);
+	printf("free parameters\n");
 	if (mini->parameters)
 		free_parameters(mini->parameters);
 	
@@ -195,14 +198,24 @@ int	checkforexit(char *envp[])
 				
 				// set up signal
 
-				// printf("lexical\n");
+				printf("lexical\n");
 				node = lexical(str, mini);// this return a linked list
 				// // pass the linked list into the parser
 
-				// printf("parsing\n");
+				t_linkedlist *templist;
+				templist = node;
+				while(templist)
+				{
+					printf("templist:%s\n", templist->data);
+					templist = templist -> next;
+
+				}
+
+
+				printf("parsing\n");
 				ast_node = breakcommandline(node, mini);
 
-				// printf("execution\n");
+				printf("execution\n");
 				execute_syntax_tree(ast_node, parameters, mini);
 
 				// sigint

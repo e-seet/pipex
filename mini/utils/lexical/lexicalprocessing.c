@@ -122,7 +122,8 @@ void	lexicalprocess(t_linkedlist *original, t_mini *mini)
 		if (strip == NULL)
 			perror("memory allocation failed\n");
 		strip_quotes(node->data, &strip, mini);
-		free(node->data);
+		if (node->data != NULL)
+			free(node->data);
 		node->data = strip;
 		node = node -> next;
 		if (node -> next == NULL)

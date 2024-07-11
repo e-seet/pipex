@@ -8,7 +8,7 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 	struct s_AST_Node	*rootnode;
 
 	filename = NULL;
-	simplecommand_node = breakcommand_node(node, mini, 1002, filename);
+	simplecommand_node = breakcommand_node(node, mini, 1002, &filename);
 	if (simplecommand_node == NULL)
 		return (NULL);
 	rootnode = malloc(sizeof(struct s_AST_Node));
@@ -30,7 +30,7 @@ struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini)
 	struct s_AST_Node	*rootnode;
 
 	filename = NULL;
-	simplecommand_node = breakcommand_node(node, mini, LESSER, filename);
+	simplecommand_node = breakcommand_node(node, mini, LESSER, &filename);
 	if (simplecommand_node == NULL)
 		return (NULL);
 	rootnode = malloc(sizeof(struct s_AST_Node));
@@ -55,7 +55,7 @@ struct s_AST_Node	*breakcommand3(t_linkedlist *node, t_mini *mini)
 	struct s_AST_Node	*rootnode;
 
 	filename = NULL;
-	simplecommand_node = breakcommand_node(node, mini, REDIR, filename);
+	simplecommand_node = breakcommand_node(node, mini, REDIR, &filename);
 	if (simplecommand_node == NULL)
 		return (NULL);
 	rootnode = malloc(sizeof(struct s_AST_Node));
@@ -78,7 +78,7 @@ struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini)
 	struct s_AST_Node	*rootnode;
 
 	filename = NULL;
-	simplecommand_node = breakcommand_node(node, mini, GREATER, filename);
+	simplecommand_node = breakcommand_node(node, mini, GREATER, &filename);
 	if (simplecommand_node == NULL)
 		return (NULL);
 	rootnode = malloc(sizeof(struct s_AST_Node));
