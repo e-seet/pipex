@@ -1,5 +1,6 @@
 #include "../utils.h"
 
+// for parsing3.c
 // first term is diff
 // second term is same
 struct s_AST_Node	*breakcommand_node(
@@ -26,6 +27,40 @@ struct s_AST_Node	*breakcommand_node(
 	return (simplecommand_node);
 }
 
+// testing for <<
+// not implemented
+// struct s_AST_Node	*tokenlist0(t_linkedlist **node, t_mini *mini)
+// {
+// 	struct s_AST_Node	*tokenlistnode;
+// 	struct s_AST_Node	*rootnode;
+// 	char				*arg;
+
+// 	if (!term(TOKEN, &arg, node))
+// 	{
+// 		return (NULL);
+// 	}
+// 	tokenlistnode = breaktokenlist(node, mini);
+// 	rootnode = malloc(sizeof(struct s_AST_Node));
+// 	if (rootnode == NULL)
+// 	{
+// 		memoryerror(mini);
+// 		return (NULL);
+// 	}
+// 	nodesettype(rootnode, NODE_ARGUMENT);
+// 	nodesetdata(rootnode, arg);
+// 	attachbinarybranch(rootnode, NULL, tokenlistnode);
+// 	return (rootnode);
+// }
+
+
+	// if (!term(1002, NULL, &node))
+	// {
+	// 	// nodedelete(simplecommand_node);
+	// 	return (NULL);
+	// }
+
+
+// for parsing4.c stuff
 struct s_AST_Node	*tokenlist1(t_linkedlist **node, t_mini *mini)
 {
 	struct s_AST_Node	*tokenlistnode;
@@ -43,6 +78,12 @@ struct s_AST_Node	*tokenlist1(t_linkedlist **node, t_mini *mini)
 		memoryerror(mini);
 		return (NULL);
 	}
+	
+	if (tokenlistnode != NULL)
+	{
+		printf("tokenlistnode:%s\n", tokenlistnode->data);
+	}
+
 	nodesettype(rootnode, NODE_ARGUMENT);
 	nodesetdata(rootnode, arg);
 	attachbinarybranch(rootnode, NULL, tokenlistnode);

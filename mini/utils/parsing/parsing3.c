@@ -23,6 +23,86 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 	attachbinarybranch(rootnode, NULL, simplecommand_node);
 	return (rootnode);
 }
+
+// i want to add this layer at the bottom
+struct s_AST_Node	*breakcommand1_modified(t_linkedlist **node, t_mini *mini)
+{
+	struct s_AST_Node	*simplecommand_node;
+	char				*filename;
+	struct s_AST_Node	*rootnode;
+
+	filename = NULL;
+	printf("break command1 modified\n");
+
+	// token is already tested for.
+
+	// printf("modified 1\n");
+	// printf("node type(CAT TOKEN):%d\n", (*node)->type);
+	// simplecommand_node = simplecommand(node, mini);
+
+
+
+	// simplecommand_node = breakcommand_node(*node, mini, 1002, &filename);
+	
+	simplecommand_node = breaktokenlist(node, mini);
+	if (simplecommand_node == NULL)
+		return (NULL);
+	// if (!term(TOKEN, NULL, &node))
+	// {
+	// 	nodedelete(simplecommand_node);
+	// 	return (NULL);
+	// }
+	// if (!term(TOKEN, filename, &node))
+	// {
+	// 	nodedelete(simplecommand_node);
+	// 	free(*filename);
+	// 	return (NULL);
+	// }
+
+	// printf("node type(<< 1002):%d\n", (*node)->type);
+	if (!term(1002, NULL, node))
+	{
+		nodedelete(simplecommand_node);
+		return (NULL);
+	}
+	// printf("node type (EOF TOKEN):%d\n", (*node)->type);
+	if (!term(TOKEN, &filename, node))
+	{
+		nodedelete(simplecommand_node);
+		free(filename);
+		return (NULL);
+	}
+
+	if (simplecommand_node == NULL)
+	{
+		printf("simplecommand node is null\n");
+		return (NULL);
+	}
+	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		memoryerror(mini);
+		return (NULL);
+	}
+
+	// printf("make heredoc\n");
+	nodesettype(rootnode, NODE_HEREDOC);
+	nodesetdata(rootnode, filename);
+	printf("filename in 1:%s\n", filename);
+	// t_linkedlist *temp = *node;
+	// while (temp)
+	// {
+	// 	// printf("data:%s\n", temp->data);
+	// 	// printf("current type:%d\n", temp->type);
+	// 	temp = temp->next;
+	// }
+	// printf("\n\n");
+
+	// printf("set heredoc in breakcommand 3\n");
+	attachbinarybranch(rootnode, NULL, simplecommand_node);
+	printf("modified 1 worked\n");
+	return (rootnode);
+}
 // */
 
 struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini)
@@ -93,7 +173,7 @@ struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini)
 	}
 	nodesettype(rootnode, NODE_REDIRECT_OUT);
 	nodesetdata(rootnode, filename);
-	printf("break command 4\n filename:%s", filename);
+	// printf("break command 4\n filename:%s", filename);
 	attachbinarybranch(rootnode, NULL, simplecommand_node);
 	return (rootnode);
 }

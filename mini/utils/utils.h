@@ -77,8 +77,11 @@ typedef enum e_NodeType
 // for lexer below
 typedef enum Token
 {
+	// 124
 	PIPE = '|',
+	// 62
 	GREATER = '>',
+	// 60
 	LESSER = '<',
 	SEMICOLON = ';',
 	//unique code for 1001: >> and 1002: <<
@@ -288,6 +291,11 @@ struct s_AST_Node	*breakcommand5(t_linkedlist *node, t_mini *mini);
 struct s_AST_Node	*breakcommand_node(t_linkedlist *node, t_mini *mini,
 						int termval, char **filename);
 
+// temp
+struct s_AST_Node	*breakcommand1_modified(t_linkedlist **node, t_mini *mini);
+struct s_AST_Node	*simplecommand_original(t_linkedlist **node, t_mini *mini);
+
+
 // parsing4.c
 struct s_AST_Node	*breaktokenlist(t_linkedlist **node, t_mini *mini);
 struct s_AST_Node	*tokenlist1(t_linkedlist **node, t_mini *mini);
@@ -412,7 +420,6 @@ void				setsignals(int sig);
 
 #endif
 
-// top
 //parsing
 // <command line>	::= 	<job> ';' <command line>
 // 					|	<job> ';'
@@ -423,15 +430,20 @@ void				setsignals(int sig);
 // 					|	<command>
 
 //parsing
-// <command>		::=		<simple command> '<' filename
+// <command>		::=	
 // 					|	<simple command> '>' filename
 // 					|	<simple command> '>>' filename
-// 					|	<simple command> '<<' filename *
+// 					|	<simple command> '<' filename
 // 					|	<simple command>
+
+
+// this statement needs to be processed first
+// therefore should be at a lower level aka parsing1.
+// 					|	<simple command> '<<' filename *
 
 //parsing1
 // <simple command>::=		<pathname> <token list>
 
 // <token list>	::=		<token> <token list>
-// |	(EMPTY)
+				// |	(EMPTY)
 // bottom

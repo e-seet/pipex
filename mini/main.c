@@ -6,9 +6,21 @@ struct s_AST_Node			*ast_node;
 void inOrderTraversal(struct s_AST_Node* root, int depth) {
     if (root != NULL) {
 		
-	    inOrderTraversal(root->left, depth);    // Traverse left subtree
-        printf("%s, %d\n", root->data, depth);       // Visit root node
-        inOrderTraversal(root->right, depth);   // Traverse right subtree
+        if (root->left != NULL)
+		{
+			printf("left:%s\n", (root->left)->data);
+			printf("left type:%d\n", (root->left)->type);
+		}
+
+		printf("%s, %d\n", root->data, depth);
+		printf("type: %d\n, %d\n", root->type, depth);
+
+        if (root->right != NULL)
+		{
+			printf("right:%s\n", (root->right)->data);
+			printf("right type:%d\n", (root->right)->type);
+		}
+
 		depth = depth + 1;
     }
 }
@@ -215,13 +227,13 @@ int	checkforexit(char *envp[])
 				node = lexical(str, mini);// this return a linked list
 				// // pass the linked list into the parser
 
-				t_linkedlist *templist;
-				templist = node;
-				while(templist)
-				{
-					printf("templist:%s\n", templist->data);
-					templist = templist -> next;
-				}
+				// t_linkedlist *templist;
+				// templist = node;
+				// while(templist)
+				// {
+				// 	printf("templist:%s\n", templist->data);
+				// 	templist = templist -> next;
+				// }
 
 
 				printf("parsing\n");

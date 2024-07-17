@@ -42,10 +42,10 @@ struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini)
 	return (NULL);
 }
 
-// <command>		::=		<simple command> '<' filename
+// <command>		::=
+// 					|	<simple command> '<' filename
 // 					|	<simple command> '>' filename
-// 					|	<simple command> '>>' filename
-// 					|	<simple command> '<<' filename
+/*// 					|	<simple command> '>>' filename */
 // 					|	<simple command>
 struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini)
 {
@@ -53,10 +53,11 @@ struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini)
 	struct s_AST_Node	*ast_node;
 
 	saved = node;
-	ast_node = breakcommand1(node, mini);
-	if (ast_node != NULL)
-		return (ast_node);
-	node = saved;
+	// ast_node = breakcommand1(node, mini);
+	// if (ast_node != NULL)
+	// 	return (ast_node);
+	// node = saved;
+
 	ast_node = breakcommand2(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);
@@ -82,28 +83,59 @@ struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini)
 	// *node = saved;
 	// we don't check whether tokenlistnode is NULL since its a valid grammer
 // }
+
+
 struct s_AST_Node	*simplecommand(t_linkedlist **node, t_mini *mini)
 {
 	struct s_AST_Node	*tokenlistnode;
 	struct s_AST_Node	*rootnode;
 	char				*path;
 
-	if (!term(TOKEN, &path, node))
-	{
-		return (NULL);
-	}
-	tokenlistnode = breaktokenlist(node, mini);
-	rootnode = malloc(sizeof(struct s_AST_Node));
-	if (rootnode == NULL)
-	{
-		memoryerror(mini);
-		return (NULL);
-	}
-	nodesettype(rootnode, NODE_CMDPATH);
-	nodesetdata(rootnode, path);
-	attachbinarybranch(rootnode, NULL, tokenlistnode);
-	return (rootnode);
+	t_linkedlist *original;
+	original = *node;
+
+	// if
+		tokenlistnode = breakcommand1_modified(node, mini);
+		if (tokenlistnode != NULL)
+		{
+			rootnode = malloc(sizeof(struct s_AST_Node));
+			if (rootnode == NULL)
+			{
+				memoryerror(mini);
+				return (NULL);
+			}
+			nodesettype(rootnode, NODE_CMDPATH);
+			// nodesetdata(rootnode, path);
+			attachbinarybranch(rootnode, NULL, tokenlistnode);
+			return (rootnode);
+		}
+		else
+		{
+			*node = original;
+			// oriignal
+			if (!term(TOKEN, &path, node))
+			{
+				return (NULL);
+			}
+			tokenlistnode = breaktokenlist(node, mini);
+			rootnode = malloc(sizeof(struct s_AST_Node));
+			if (rootnode == NULL)
+			{
+				memoryerror(mini);
+				return (NULL);
+			}
+			nodesettype(rootnode, NODE_CMDPATH);
+			nodesetdata(rootnode, path);
+			attachbinarybranch(rootnode, NULL, tokenlistnode);
+			return (rootnode);
+		}
+
 }
+
+// token
+// left null
+// right is everything else
+// so should do stuff here
 
 // this just return the token list node. Does not have any binary nodes
 // <token list>	::=		<token> <token list>
@@ -115,6 +147,14 @@ struct s_AST_Node	*breaktokenlist(t_linkedlist **node, t_mini *mini)
 	struct s_AST_Node	*rootnode;
 
 	saved = *node;
+	
+	// rootnode = breakcommand1_modified(node, mini);
+	// if (rootnode != NULL)
+	// {
+	// 	return (rootnode);
+	// }
+	// *node = saved;
+		
 	rootnode = tokenlist1(node, mini);
 	if (rootnode != NULL)
 	{
