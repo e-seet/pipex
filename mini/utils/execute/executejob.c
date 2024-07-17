@@ -32,6 +32,7 @@ void	heredocinput(char *input,
 						- linechecker(input)) == strlen((*rootnode)->data)))
 			{
 				free(input);
+				rl_clear_history();
 				break ;
 			}
 			write(heredocwritefd, input, ft_strlen(input));
@@ -61,6 +62,9 @@ void	prepheredoc(struct s_AST_Node **rootnode, t_mini *mini)
 	}
 	if (input != NULL)
 		free(input);
+	
+	// here we can control file in. but we do not have the file out
+	
 	filein = ft_calloc(16, sizeof(char));
 	if (filein == NULL)
 		return memoryerror(mini);
@@ -78,8 +82,10 @@ void	execute_job(struct s_AST_Node **rootnode,
 		return ;
 	if (nodetype((*rootnode)->type) == NODE_PIPE)
 		execute_pipe((rootnode), async, parameters, mini);
+	
 	else if (nodetype((*rootnode)->type) == NODE_HEREDOC)
 	{
+		printf("root type is heredoc\n");
 		prepheredoc(rootnode, mini);
 		if (sigint_received == -1)
 			return ;
@@ -87,7 +93,7 @@ void	execute_job(struct s_AST_Node **rootnode,
 		parameters->writepipe = 0;
 		parameters->piperead = 0;
 		parameters->pipewrite = 0;
-		parameters->async = async;
+		parameters->async = 1;
 		execute_command(rootnode, parameters, mini);
 	}
 	else

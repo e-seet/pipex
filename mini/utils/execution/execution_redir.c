@@ -7,11 +7,11 @@ void	redirection_async(t_parameters *parameters)
 
 	if (parameters->async)
 	{
-		printf("is async\n");
-		fdasync = open("/dev/null", O_RDWR);
+		// printf("is async\n");
+		fdasync = open("heredoctemp.txt", O_RDWR);
 		if (fdasync == -1)
 		{
-			perror("/dev/null");
+			perror("heredoctemp.txt failed to open");
 			exit(1);
 		}
 		dup2(fdasync, STDIN_FILENO);

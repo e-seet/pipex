@@ -1,5 +1,18 @@
 #include "utils/utils.h"
 
+
+struct s_AST_Node			*ast_node;
+
+void inOrderTraversal(struct s_AST_Node* root, int depth) {
+    if (root != NULL) {
+		
+	    inOrderTraversal(root->left, depth);    // Traverse left subtree
+        printf("%s, %d\n", root->data, depth);       // Visit root node
+        inOrderTraversal(root->right, depth);   // Traverse right subtree
+		depth = depth + 1;
+    }
+}
+
 volatile sig_atomic_t sigint_received = 0;
 
 void	free_arraypointers(char **strs)
@@ -208,12 +221,18 @@ int	checkforexit(char *envp[])
 				{
 					printf("templist:%s\n", templist->data);
 					templist = templist -> next;
-
 				}
 
 
 				printf("parsing\n");
 				ast_node = breakcommandline(node, mini);
+
+				// // checking. 
+				// so there is issue with missing > output.txt
+				printf("\n\ntraversal \n");
+				int depth = 0;
+				inOrderTraversal(ast_node, depth);
+				printf("end of traversal \n");
 
 				printf("execution\n");
 				execute_syntax_tree(ast_node, parameters, mini);

@@ -101,10 +101,11 @@ void	strip_quotes(char *src, char **dest, t_mini *mini)
 	srclen = ft_strlen(src);
 	if (srclen <= 1)
 	{
-		ft_strlcpy(*dest, src, srclen);
-		return ;
+		ft_strlcpy(*dest, src, srclen + 1);
+		// return ;
 	}
-	strip_quotes2(src, *dest, srclen, &envnum);
+	else
+		strip_quotes2(src, *dest, srclen, &envnum);
 	mini->envnum = envnum;
 }
 

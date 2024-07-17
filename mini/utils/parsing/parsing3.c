@@ -1,6 +1,7 @@
 #include "../utils.h"
 
 // <<
+// /*
 struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 {
 	struct s_AST_Node	*simplecommand_node;
@@ -22,6 +23,7 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 	attachbinarybranch(rootnode, NULL, simplecommand_node);
 	return (rootnode);
 }
+// */
 
 struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini)
 {
@@ -70,6 +72,8 @@ struct s_AST_Node	*breakcommand3(t_linkedlist *node, t_mini *mini)
 	return (rootnode);
 }
 
+// this did not get called. 
+// probably broken with command3 <<
 // > 
 struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini)
 {
@@ -89,6 +93,7 @@ struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini)
 	}
 	nodesettype(rootnode, NODE_REDIRECT_OUT);
 	nodesetdata(rootnode, filename);
+	printf("break command 4\n filename:%s", filename);
 	attachbinarybranch(rootnode, NULL, simplecommand_node);
 	return (rootnode);
 }

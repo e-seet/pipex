@@ -212,6 +212,12 @@ void	execution2(t_parameters *parameters, t_mini	*mini)
 		printf("return due to argc < 0 ");
 		return ;
 	}
+	int i = 0;
+	while (parameters->argv[i])
+	{
+		printf("argv:%d, %s\n", i, parameters->argv[i]);
+		i++;
+	}
 	// if there is built in
 	if (builtincommand(parameters, mini))
 		return ;

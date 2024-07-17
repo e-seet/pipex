@@ -273,6 +273,7 @@ struct s_AST_Node	*breakcommandline3(t_linkedlist *node, t_mini *mini);
 struct s_AST_Node	*breakjob1(t_linkedlist *node, t_mini *mini);
 struct s_AST_Node	*breakjob2(t_linkedlist *node, t_mini *mini);
 
+
 // parsing3.c
 // <<
 struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini);
@@ -425,7 +426,7 @@ void				setsignals(int sig);
 // <command>		::=		<simple command> '<' filename
 // 					|	<simple command> '>' filename
 // 					|	<simple command> '>>' filename
-// 					|	<simple command> '<<' filename
+// 					|	<simple command> '<<' filename *
 // 					|	<simple command>
 
 //parsing1
