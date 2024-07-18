@@ -288,6 +288,11 @@ struct s_AST_Node	*breakcommand5(t_linkedlist *node, t_mini *mini);
 struct s_AST_Node	*breakcommand_node(t_linkedlist *node, t_mini *mini,
 						int termval, char **filename);
 
+struct s_AST_Node	*breakcommand_node_1(t_linkedlist **node, t_mini *mini,
+						int termval, char **filename);
+struct s_AST_Node	*breakcommand1_extend(t_linkedlist *node, t_mini *mini);
+
+
 // parsing4.c
 struct s_AST_Node	*breaktokenlist(t_linkedlist **node, t_mini *mini);
 struct s_AST_Node	*tokenlist1(t_linkedlist **node, t_mini *mini);

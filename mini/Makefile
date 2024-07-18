@@ -25,6 +25,7 @@ SRC_FILES			:=	main.c	\
 						./utils/parsing/parsing2.c\
 						./utils/parsing/parsing3.c\
 						./utils/parsing/parsing4.c\
+						./utils/parsing/parsing5.c\
 						./utils/execute/execute.c\
 						./utils/execute/executejob.c\
 						./utils/execute/executesimplecommand.c\

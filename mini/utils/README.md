@@ -65,3 +65,5 @@ tgetnum, tgetstr, tgoto, tputs
  2. mini->path may have issues as well due to the nature of parsing
 
  These needs to be checked
+
+echo << eof > output.txt

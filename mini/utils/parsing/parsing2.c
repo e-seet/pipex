@@ -46,6 +46,34 @@ struct s_AST_Node	*breakjob1(t_linkedlist *node, t_mini *mini)
 	return (rootnode);
 }
 
+struct s_AST_Node	*breakjobtest(t_linkedlist *node, t_mini *mini)
+{
+	struct s_AST_Node	*command_node;
+	struct s_AST_Node	*job_node;
+	struct s_AST_Node	*rootnode;
+
+	command_node = NULL;
+	command_node = breakjob1_node(node, mini);
+	if (command_node == NULL)
+		return (NULL);
+	
+	job_node = breakjob(node, mini);
+	if (job_node == NULL)
+	{
+		nodedelete(job_node);
+		return (NULL);
+	}
+	rootnode = malloc(sizeof(struct s_AST_Node));
+	if (rootnode == NULL)
+	{
+		perror("rootnode malloc error\n");
+	}
+	nodesettype(rootnode, NODE_PIPE);
+	nodesetdata(rootnode, NULL);
+	attachbinarybranch(rootnode, command_node, job_node);
+	return (rootnode);
+}
+
 struct s_AST_Node	*breakjob2(t_linkedlist *node, t_mini *mini)
 {
 	return (breakcommand(node, mini));

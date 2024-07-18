@@ -35,6 +35,12 @@ struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini)
 	rootnode = breakjob1(node, mini);
 	if (rootnode != NULL)
 		return (rootnode);
+
+	// node = saved;
+	// rootnode = breakjobtest(node, mini);
+	// if (rootnode != NULL)
+	// 	return (rootnode);	
+	
 	node = saved;
 	rootnode = breakjob2(node, mini);
 	if (rootnode != NULL)
@@ -53,10 +59,12 @@ struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini)
 	struct s_AST_Node	*ast_node;
 
 	saved = node;
+	
 	ast_node = breakcommand1(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);
 	node = saved;
+
 	ast_node = breakcommand2(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);

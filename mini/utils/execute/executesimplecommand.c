@@ -77,8 +77,22 @@ void	execute_command(struct s_AST_Node **rootnode,
 	if (nodetype((*rootnode)->type) == NODE_HEREDOC)
 	{
 		parameters->append = 1;
-		execute_simple_command(((*rootnode)->right),
-			mini, (*rootnode)->data, NULL);
+		
+		// this part may need to execute first.
+		if ((*rootnode)->left != NULL)
+		{
+			printf("type:%d\n", nodetype(((*rootnode)->left)->type));
+			printf("fileout:%s\n", ((*rootnode)->left)->data);
+			if (nodetype(((*rootnode)->left)->type) != NODE_REDIRECT)
+				parameter->append = 0;
+			execute_simple_command(((*rootnode)->right),
+				mini, (*rootnode)->data, ((*rootnode)->left)->data);
+		}
+		else
+		{
+			execute_simple_command(((*rootnode)->right),
+				mini, (*rootnode)->data, NULL);
+		}
 	}
 	else if (nodetype((*rootnode)->type) == NODE_REDIRECT_IN)
 	{

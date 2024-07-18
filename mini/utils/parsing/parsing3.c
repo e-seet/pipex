@@ -5,11 +5,12 @@
 struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 {
 	struct s_AST_Node	*simplecommand_node;
+	struct s_AST_Node	*redirection_node;
 	char				*filename;
 	struct s_AST_Node	*rootnode;
 
 	filename = NULL;
-	simplecommand_node = breakcommand_node(node, mini, 1002, &filename);
+	simplecommand_node = breakcommand_node_1(&node, mini, 1002, &filename);
 	if (simplecommand_node == NULL)
 		return (NULL);
 	rootnode = malloc(sizeof(struct s_AST_Node));
@@ -20,11 +21,30 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 	}
 	nodesettype(rootnode, NODE_HEREDOC);
 	nodesetdata(rootnode, filename);
-	attachbinarybranch(rootnode, NULL, simplecommand_node);
+
+	// let's say that is is not the end
+	// i should be able to get where it is being redirected to
+	// printf("data:%s\n", node->data);
+	// printf("type:%d\n", node->type);
+	redirection_node = breakcommand1_extend(node, mini);
+
+	if (redirection_node != NULL)
+	{
+		printf("redirection node exists\n");
+		// why is this 528
+		printf("type:%d\n", nodetype(redirection_node->type));
+		printf("fileout:%s\n", redirection_node->data);
+		
+		attachbinarybranch(rootnode, redirection_node, simplecommand_node);
+	}
+	else
+		attachbinarybranch(rootnode, NULL, simplecommand_node);
+
 	return (rootnode);
 }
 // */
 
+// <
 struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini)
 {
 	struct s_AST_Node	*simplecommand_node;
