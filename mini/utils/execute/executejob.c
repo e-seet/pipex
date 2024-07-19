@@ -33,12 +33,16 @@ void	heredocinput(char *input,
 			{
 				free(input);
 				rl_clear_history();
+				rl_on_new_line();
+				rl_replace_line("", 0);
+				rl_redisplay();
+
 				break ;
 			}
 			write(heredocwritefd, input, ft_strlen(input));
+			add_history(input);
 			free(input);
 			input = NULL;
-			add_history(input);
 		}
 		free(input);
 	}
@@ -85,8 +89,9 @@ void	execute_job(struct s_AST_Node **rootnode,
 	
 	else if (nodetype((*rootnode)->type) == NODE_HEREDOC)
 	{
-		printf("root type is heredoc\n");
 		prepheredoc(rootnode, mini);
+		// printf("root type is heredoc\n");
+		// printf("check file anme:%s\n", (*rootnode)->data);
 		if (sigint_received == -1)
 			return ;
 		parameters->readpipe = 0;

@@ -97,6 +97,49 @@ void	execute_echo_prehandler(t_parameters *parameters, int *i,
 	}
 }
 
+void	execute_echo_out(t_parameters *parameters, char *str)
+{
+	char	buffer[1024];
+	ssize_t	bytes_read;
+
+	if (parameters->file_in != NULL
+		&& (ft_strncmp(parameters->file_in, parameters->file_in,
+				ft_strlen(parameters->file_in)) == 0))
+	{
+		bytes_read = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
+		while (bytes_read > 0)
+		{
+			buffer[bytes_read] = '\0'; // Null-terminate the string
+			ft_putstr_fd(buffer, STDOUT_FILENO);
+			bytes_read = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
+		}
+		close(STDIN_FILENO);
+		close(STDOUT_FILENO);
+	}
+	else
+	{
+		if (parameters->argc > 1 && ft_strncmp(parameters->argv[1],
+				"-n", ft_strlen("-n")) == 0)
+			ft_putstr_fd(str, STDOUT_FILENO);
+		else
+			ft_putstr_fd(ft_strjoin(str, "\n"), STDOUT_FILENO);
+	}
+}
+
+void	reset_dup(int stdintfd, int stdoutfd, t_mini *mini)
+{
+	if (dup2(stdintfd, STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		mini->exit_status = 1;
+	}
+	if (dup2(stdoutfd, STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		mini->exit_status = 1;
+	}
+}
+
 // echo alone will error. Need to find out where
 // combine everything to a string
 // write to fd
@@ -109,8 +152,8 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 	int		i;
 	char	*str;
 	int		stdoutfd;
+	int		stdintfd;
 
-	printf("execute echo!\n");
 	str = calloc(1, sizeof(char));
 	if (str == NULL)
 		return (memoryerror(mini));
@@ -120,30 +163,17 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1],
 			"-n", ft_strlen("-n")) == 0)
 		i = 2;
-	stdoutfd = dup(STDOUT_FILENO);
 	execute_echo_prehandler(parameters, &i, &str, mini);
-	printf("the str:%s\n", str);
-	printf("check argv\n");
-	int x = 0;
-	while (parameters->argv[x])
+	stdoutfd = dup(STDOUT_FILENO);
+	stdintfd = dup(STDIN_FILENO);
+	if (stdintfd == -1 || stdoutfd == -1)
 	{
-		printf("argv %d: %s\n", x, parameters->argv[x]);
-		x++;
-	}
-	printf("file in: %s\n", parameters->file_in);
-	printf("file out: %s\n", parameters->file_out);
-
-	redirection(parameters);
-	if (parameters->argc > 1 && ft_strncmp(parameters->argv[1],
-			"-n", ft_strlen("-n")) == 0)
-		ft_putstr_fd(str, STDOUT_FILENO);
-	else
-		ft_putstr_fd(ft_strjoin(str, "\n"), STDOUT_FILENO);
-	if (dup2(stdoutfd, STDOUT_FILENO) == -1)
-	{
-		perror("dup2");
+		perror("dup error");
 		mini->exit_status = 1;
 	}
+	redirection(parameters);
+	execute_echo_out(parameters, str);
+	reset_dup(stdintfd, stdoutfd, mini);
 	mini->exit_status = 0;
 }
 
@@ -212,6 +242,7 @@ void	execution2(t_parameters *parameters, t_mini	*mini)
 		printf("return due to argc < 0 ");
 		return ;
 	}
+	printf("execution2\n");
 	int i = 0;
 	while (parameters->argv[i])
 	{

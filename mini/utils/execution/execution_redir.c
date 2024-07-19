@@ -74,7 +74,7 @@ void	redirection(t_parameters *parameters)
 		}
 		dup2(fdin, STDIN_FILENO);
 	}
-	else if (parameters->file_out)
+	if (parameters->file_out)
 		redirection_fileout(parameters);
 	redirection_pipes(parameters);
 }

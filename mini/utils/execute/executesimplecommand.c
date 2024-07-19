@@ -84,7 +84,8 @@ void	execute_command(struct s_AST_Node **rootnode,
 			printf("type:%d\n", nodetype(((*rootnode)->left)->type));
 			printf("fileout:%s\n", ((*rootnode)->left)->data);
 			if (nodetype(((*rootnode)->left)->type) != NODE_REDIRECT)
-				parameter->append = 0;
+				parameters->append = 0;
+			
 			execute_simple_command(((*rootnode)->right),
 				mini, (*rootnode)->data, ((*rootnode)->left)->data);
 		}

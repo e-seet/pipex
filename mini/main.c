@@ -54,6 +54,8 @@ void	free_mini(t_mini *mini)
 	// 	free_arraypointers(mini->envp);
 	// if (mini->envp)
 	// 	free_arraypointers(mini->paths);
+	// rl_redisplay();
+
 }
 
 // starts the program and get the input from user.
@@ -127,10 +129,15 @@ int	checkforexit(char *envp[])
 	while (1)
 	{
 		str = readline("minishell>");
-		if (!str)
+		if (str == NULL)
+		{
+			printf("!str, breka\n");
 			break;
+		}
 		if (*str)
+		{
 			add_history(str);
+		}
 
 		// sigint
 		if (sigint_received == -1
@@ -212,6 +219,7 @@ int	checkforexit(char *envp[])
 				// set up signal
 
 				printf("lexical\n");
+				printf("str:%s", str);
 				node = lexical(str, mini);// this return a linked list
 				// // pass the linked list into the parser
 
@@ -264,7 +272,11 @@ int	checkforexit(char *envp[])
 		// this should comment out
         // rl_redisplay(); // Redisplay the line (useful if line was replaced)
         
-        free(str); // Free the input string allocated by readline
+		if (str)
+		{
+			free(str); // Free the input string allocated by readline
+			str = NULL;
+		}
 	}
 	rl_clear_history();
 

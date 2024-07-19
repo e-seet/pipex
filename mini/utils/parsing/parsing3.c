@@ -30,11 +30,6 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 
 	if (redirection_node != NULL)
 	{
-		printf("redirection node exists\n");
-		// why is this 528
-		printf("type:%d\n", nodetype(redirection_node->type));
-		printf("fileout:%s\n", redirection_node->data);
-		
 		attachbinarybranch(rootnode, redirection_node, simplecommand_node);
 	}
 	else
