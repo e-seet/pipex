@@ -53,30 +53,30 @@ struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini)
 // 					|	<simple command> '>>' filename
 // 					|	<simple command> '<<' filename
 // 					|	<simple command>
-struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakcommand(t_linkedlist **node, t_mini *mini)
 {
 	t_linkedlist		*saved;
 	struct s_AST_Node	*ast_node;
 
-	saved = node;
+	saved = *node;
 	
 	ast_node = breakcommand1(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);
-	node = saved;
+	*node = saved;
 
 	ast_node = breakcommand2(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);
-	node = saved;
+	*node = saved;
 	ast_node = breakcommand3(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);
-	node = saved;
+	*node = saved;
 	ast_node = breakcommand4(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);
-	node = saved;
+	*node = saved;
 	ast_node = breakcommand5(node, mini);
 	if (ast_node != NULL)
 		return (ast_node);

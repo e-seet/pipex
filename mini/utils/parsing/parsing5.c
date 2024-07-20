@@ -7,7 +7,7 @@
 // > 62
 // 1001: >>
 // 1002 : heredoc
-struct s_AST_Node	*breakcommand1_extend(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakcommand1_extend(t_linkedlist **node, t_mini *mini)
 {
 	char				*filename;
 	struct s_AST_Node	*rootnode;
@@ -18,15 +18,15 @@ struct s_AST_Node	*breakcommand1_extend(t_linkedlist *node, t_mini *mini)
 	// printf("type:%d\n", node->type);
 
 	t_linkedlist *saved;
-	saved = node;
+	saved = *node;
 
 	// >>
-	if (term(REDIR, NULL, &node))
+	if (term(REDIR, NULL, node))
 	{
 		// printf("data1:%s\n", node->data);
 		// printf("type1:%d\n\n", node->type);
 
-		if (!term(TOKEN, &filename, &node))
+		if (!term(TOKEN, &filename, node))
 		{
 			free(filename);
 			return (NULL);
@@ -42,16 +42,16 @@ struct s_AST_Node	*breakcommand1_extend(t_linkedlist *node, t_mini *mini)
 		return (rootnode);
 	}
 
-	node = saved;
+	*node = saved;
 	// printf("data:%s\n", node->data);
 	// printf("type:%d\n", node->type);
 	// >
-	if (term(GREATER, NULL, &node))
+	if (term(GREATER, NULL, node))
 	{
 		// printf("data2:%s\n", node->data);
 		// printf("type2:%d\n\n", node->type);
 
-		if (!term(TOKEN, &filename, &node))
+		if (!term(TOKEN, &filename, node))
 		{
 			free(filename);
 			return (NULL);
@@ -69,7 +69,7 @@ struct s_AST_Node	*breakcommand1_extend(t_linkedlist *node, t_mini *mini)
 		return (rootnode);
 	}
 
-	node = saved;
+	// node = saved;
 	// < does not exist. So we can just ignore
 	// // printf("data:%s\n", node->data);
 	// // printf("type:%d\n", node->type);

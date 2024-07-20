@@ -40,6 +40,6 @@ void	execute_pipe_job(struct s_AST_Node **rootnode,
 	close(parameters->pipewrite);
 	parameters->readpipe = 1;
 	parameters->writepipe = 0;
-	execute_command(&((*rootnode)->left), parameters, mini);
+	execute_command(&((*rootnode)->right), parameters, mini);
 	close(parameters->piperead);
 }

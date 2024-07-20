@@ -261,7 +261,8 @@ void				findenvvariable(char **src, t_mini *mini, int envnum);
 // parsing
 struct s_AST_Node	*breakcommandline(t_linkedlist *node, t_mini *mini);
 struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini);
-struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini);
+// struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand(t_linkedlist **node, t_mini *mini);
 struct s_AST_Node	*simplecommand(t_linkedlist **node, t_mini *mini);
 
 // breakcommandline in parsing1
@@ -276,21 +277,21 @@ struct s_AST_Node	*breakjob2(t_linkedlist *node, t_mini *mini);
 
 // parsing3.c
 // <<
-struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand1(t_linkedlist **node, t_mini *mini);
 // <
-struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand2(t_linkedlist **node, t_mini *mini);
 //>>
-struct s_AST_Node	*breakcommand3(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand3(t_linkedlist **node, t_mini *mini);
 //>
-struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini);
-struct s_AST_Node	*breakcommand5(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand4(t_linkedlist **node, t_mini *mini);
+struct s_AST_Node	*breakcommand5(t_linkedlist **node, t_mini *mini);
 
-struct s_AST_Node	*breakcommand_node(t_linkedlist *node, t_mini *mini,
+struct s_AST_Node	*breakcommand_node(t_linkedlist **node, t_mini *mini,
 						int termval, char **filename);
 
 struct s_AST_Node	*breakcommand_node_1(t_linkedlist **node, t_mini *mini,
 						int termval, char **filename);
-struct s_AST_Node	*breakcommand1_extend(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakcommand1_extend(t_linkedlist **node, t_mini *mini);
 
 
 // parsing4.c

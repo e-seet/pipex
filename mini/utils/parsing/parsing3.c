@@ -2,7 +2,7 @@
 
 // <<
 // /*
-struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakcommand1(t_linkedlist **node, t_mini *mini)
 {
 	struct s_AST_Node	*simplecommand_node;
 	struct s_AST_Node	*redirection_node;
@@ -10,7 +10,7 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 	struct s_AST_Node	*rootnode;
 
 	filename = NULL;
-	simplecommand_node = breakcommand_node_1(&node, mini, 1002, &filename);
+	simplecommand_node = breakcommand_node_1(node, mini, 1002, &filename);
 	if (simplecommand_node == NULL)
 		return (NULL);
 	rootnode = malloc(sizeof(struct s_AST_Node));
@@ -40,7 +40,7 @@ struct s_AST_Node	*breakcommand1(t_linkedlist *node, t_mini *mini)
 // */
 
 // <
-struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakcommand2(t_linkedlist **node, t_mini *mini)
 {
 	struct s_AST_Node	*simplecommand_node;
 	char				*filename;
@@ -65,7 +65,7 @@ struct s_AST_Node	*breakcommand2(t_linkedlist *node, t_mini *mini)
 // >>
 // to fix the permission for this
 // this needs to append and not overwrite like breakcommand4
-struct s_AST_Node	*breakcommand3(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakcommand3(t_linkedlist **node, t_mini *mini)
 {
 	struct s_AST_Node	*simplecommand_node;
 	char				*filename;
@@ -90,7 +90,7 @@ struct s_AST_Node	*breakcommand3(t_linkedlist *node, t_mini *mini)
 // this did not get called. 
 // probably broken with command3 <<
 // > 
-struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakcommand4(t_linkedlist **node, t_mini *mini)
 {
 	struct s_AST_Node	*simplecommand_node;
 	char				*filename;
@@ -113,9 +113,9 @@ struct s_AST_Node	*breakcommand4(t_linkedlist *node, t_mini *mini)
 	return (rootnode);
 }
 
-struct s_AST_Node	*breakcommand5(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakcommand5(t_linkedlist **node, t_mini *mini)
 {
-	return (simplecommand(&node, mini));
+	return (simplecommand(node, mini));
 }
 
 // <

@@ -1,21 +1,21 @@
 #include "../utils.h"
 
 struct s_AST_Node	*breakcommand_node(
-	t_linkedlist *node, t_mini *mini,
+	t_linkedlist **node, t_mini *mini,
 	int termval, char **filename
 	)
 {
 	struct s_AST_Node	*simplecommand_node;
 
-	simplecommand_node = simplecommand(&node, mini);
+	simplecommand_node = simplecommand(node, mini);
 	if (simplecommand_node == NULL)
 		return (NULL);
-	if (!term(termval, NULL, &node))
+	if (!term(termval, NULL, node))
 	{
 		nodedelete(simplecommand_node);
 		return (NULL);
 	}
-	if (!term(TOKEN, filename, &node))
+	if (!term(TOKEN, filename, node))
 	{
 		nodedelete(simplecommand_node);
 		free(*filename);
