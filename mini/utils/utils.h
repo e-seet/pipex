@@ -77,8 +77,11 @@ typedef enum e_NodeType
 // for lexer below
 typedef enum Token
 {
+	// 124
 	PIPE = '|',
+	// 62
 	GREATER = '>',
+	// 60
 	LESSER = '<',
 	SEMICOLON = ';',
 	//unique code for 1001: >> and 1002: <<
@@ -115,16 +118,25 @@ struct s_parameters
 	int		argc;
 	char	**argv;
 	// whether we need to read
+	// 1: have
+	// 0: dont have
 	int		readpipe;
 	int		writepipe;
 
 	// the fd to read from
 	int		piperead;
 	int		pipewrite;
+
+	// others
 	int		append;
 	char	*file_in;
 	char	*file_out;
 	int		async;
+	
+	// testing. To check if required
+	int		heredoc;
+	int		pipe;
+	
 };
 typedef struct s_parameters		t_parameters;
 
@@ -259,9 +271,21 @@ void				findenvvariable(char **src, t_mini *mini, int envnum);
 
 // top layers
 // parsing
+// job ; command line
+// job ;
+// job
 struct s_AST_Node	*breakcommandline(t_linkedlist *node, t_mini *mini);
-struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini);
+
+// <job>			::=		<command> '|' <job>
+// 						|	<command>
+struct s_AST_Node	*breakjob(t_linkedlist **node, t_mini *mini);
 // struct s_AST_Node	*breakcommand(t_linkedlist *node, t_mini *mini);
+
+// <command>		::=		<simple command> '<' filename
+// 					|	<simple command> '>' filename
+// 					|	<simple command> '>>' filename
+// 					|	<simple command> '<<' filename
+// 					|	<simple command>
 struct s_AST_Node	*breakcommand(t_linkedlist **node, t_mini *mini);
 struct s_AST_Node	*simplecommand(t_linkedlist **node, t_mini *mini);
 
@@ -271,8 +295,8 @@ struct s_AST_Node	*breakcommandline2(t_linkedlist *node, t_mini *mini);
 struct s_AST_Node	*breakcommandline3(t_linkedlist *node, t_mini *mini);
 
 // break job in parsing2
-struct s_AST_Node	*breakjob1(t_linkedlist *node, t_mini *mini);
-struct s_AST_Node	*breakjob2(t_linkedlist *node, t_mini *mini);
+struct s_AST_Node	*breakjob1(t_linkedlist **node, t_mini *mini);
+struct s_AST_Node	*breakjob2(t_linkedlist **node, t_mini *mini);
 
 
 // parsing3.c
@@ -291,7 +315,14 @@ struct s_AST_Node	*breakcommand_node(t_linkedlist **node, t_mini *mini,
 
 struct s_AST_Node	*breakcommand_node_1(t_linkedlist **node, t_mini *mini,
 						int termval, char **filename);
+
+// heredoc > file
+//eg: cat << eof > output.txt
 struct s_AST_Node	*breakcommand1_extend(t_linkedlist **node, t_mini *mini);
+
+// For pipe
+//eg: cat << eof | wc -w
+struct s_AST_Node	*breakcommand2_extend(t_linkedlist **node, t_mini *mini);
 
 
 // parsing4.c
@@ -323,16 +354,20 @@ void				heredocinput(char *input,
 						struct s_AST_Node **rootnode, int heredocwritefd);
 void				prepheredoc(struct s_AST_Node **rootnode, t_mini *mini);
 void				execute_job(struct s_AST_Node **rootnode,
-						int async, t_parameters *parameters,
+						int async,
+						t_parameters *parameters,
 						t_mini *mini);
 
 // execute simple command
 void				free_parameters(t_parameters *parameters);
-void				execute_simple_command(struct s_AST_Node *rootnode,
+
+void				execute_simple_command(
+						struct s_AST_Node *rootnode,
 						t_mini	*mini,
 						char	*redirect_in,
 						char	*redirect_out
 						);
+
 void				execute_command2(struct s_AST_Node **rootnode,
 						t_parameters *parameters,
 						t_mini *mini);
@@ -373,9 +408,15 @@ void				redirection(t_parameters *parameters);
 void				init_command_internal_prep_argv(struct s_AST_Node *rootnode,
 						t_parameters *parameters, struct s_AST_Node *argnode,
 						int *i);
+
 int					init_command_internal(struct s_AST_Node *rootnode,
-						t_parameters *parameters, char *file_in,
+						t_mini *mini,
+						char *file_in,
 						char *file_out);
+
+// int					init_command_internal(struct s_AST_Node *rootnode,
+// 						t_parameters *parameters, char *file_in,
+// 						char *file_out);
 
 // execution.c
 void				execution2(t_parameters *parameters, t_mini *mini);
@@ -424,10 +465,12 @@ void				setsignals(int sig);
 // 					|	<job> ';'
 // 						<job>
 
+//execute_job
 //parsing2
 // <job>			::=		<command> '|' <job>
 // 					|	<command>
 
+//execute_command
 //parsing
 // <command>		::=		<simple command> '<' filename
 // 					|	<simple command> '>' filename
@@ -441,3 +484,22 @@ void				setsignals(int sig);
 // <token list>	::=		<token> <token list>
 // |	(EMPTY)
 // bottom
+
+
+// Temp
+void inOrderTraversal(struct s_AST_Node* root, int depth);
+void read_fd_data(int fdin);
+
+// to check if i am using
+
+// if there parameter->heredoc == 1
+// There is a heredoc file to open for redir
+// parameters->heredoc
+
+// To figure out if i need async
+// parameters->async
+// and to ask for parent_wait
+
+//  To figure out if i need pipe
+// currently if there is parameters->pipe == 1
+// means there is a pipe func

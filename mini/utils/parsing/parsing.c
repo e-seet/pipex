@@ -26,12 +26,12 @@ struct s_AST_Node	*breakcommandline(t_linkedlist *node, t_mini *mini)
 
 // <job>			::=		<command> '|' <job>
 // 						|	<command>
-struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini)
+struct s_AST_Node	*breakjob(t_linkedlist **node, t_mini *mini)
 {
 	t_linkedlist		*saved;
 	struct s_AST_Node	*rootnode;
 
-	saved = node;
+	saved = *node;
 	rootnode = breakjob1(node, mini);
 	if (rootnode != NULL)
 		return (rootnode);
@@ -41,7 +41,7 @@ struct s_AST_Node	*breakjob(t_linkedlist *node, t_mini *mini)
 	// if (rootnode != NULL)
 	// 	return (rootnode);	
 	
-	node = saved;
+	*node = saved;
 	rootnode = breakjob2(node, mini);
 	if (rootnode != NULL)
 		return (rootnode);
@@ -58,6 +58,7 @@ struct s_AST_Node	*breakcommand(t_linkedlist **node, t_mini *mini)
 	t_linkedlist		*saved;
 	struct s_AST_Node	*ast_node;
 
+	// printf("break command here\n");
 	saved = *node;
 	
 	ast_node = breakcommand1(node, mini);
@@ -96,8 +97,14 @@ struct s_AST_Node	*simplecommand(t_linkedlist **node, t_mini *mini)
 	struct s_AST_Node	*rootnode;
 	char				*path;
 
+	// printf("\nsimple command function:");
+	// printf("type:%d\n", nodetype((*node)->type));
+	// printf("data:%s ", (*node)->data);
 	if (!term(TOKEN, &path, node))
 	{
+		printf("!token &path. Simple command Failed\n");
+		printf("data:%s\n", (*node)->data);
+		printf("type:%d\n", (*node)->type);
 		return (NULL);
 	}
 	tokenlistnode = breaktokenlist(node, mini);

@@ -5,7 +5,10 @@ int	executeprocess_child(t_parameters *parameters, t_mini *mini)
 	int		stdoutfd;
 	int		result;
 
+	printf(">>child process\n");
+	// duplicate it first. for later use
 	stdoutfd = dup(STDOUT_FILENO);
+
 	redirection(parameters);
 	mini->path = findprocesspath(mini, parameters);
 	if (mini->path == NULL)
@@ -14,6 +17,22 @@ int	executeprocess_child(t_parameters *parameters, t_mini *mini)
 		free(mini->path);
 		return (5);
 	}
+
+
+	// int temp;
+	// temp = dup(parameters->piperead);
+	// printf("check the temp %d", temp);
+	// read_fd_data(temp);
+
+	// int temp2;
+	// temp2 = dup(STDIN_FILENO);
+	// printf("check the temp %d", temp2);
+	// read_fd_data(temp2);
+
+	// printf("file/pipe in\n");
+	// read_fd_data(STDIN_FILENO);
+
+	printf("execeute it now\n");
 	result = execve(mini->path, parameters->argv, mini->envp);
 	if (result == -1)
 	{
@@ -24,8 +43,11 @@ int	executeprocess_child(t_parameters *parameters, t_mini *mini)
 		return (1);
 	}
 	else
+	{
+		printf("else value from execve:%d\n", result);
 		// mini->exit_status = result;
 		return (0);
+	}
 }
 
 // allow signals to be used
@@ -86,6 +108,7 @@ void	executeprocess(t_parameters *parameters, int *pid, t_mini *mini)
 void	execute_echo_prehandler(t_parameters *parameters, int *i,
 	char **str, t_mini *mini)
 {
+	printf(">>echo_prehnadler\n");
 	while (parameters->argv[*i])
 	{
 		(*str) = ft_strjoin((*str), parameters->argv[*i]);
@@ -102,6 +125,7 @@ void	execute_echo_out(t_parameters *parameters, char *str)
 	char	buffer[1024];
 	ssize_t	bytes_read;
 
+	printf("execute_echo_out\n");
 	if (parameters->file_in != NULL
 		&& (ft_strncmp(parameters->file_in, parameters->file_in,
 				ft_strlen(parameters->file_in)) == 0))
@@ -124,6 +148,7 @@ void	execute_echo_out(t_parameters *parameters, char *str)
 		else
 			ft_putstr_fd(ft_strjoin(str, "\n"), STDOUT_FILENO);
 	}
+	printf("end of execute_echo_out\n");
 }
 
 void	reset_dup(int stdintfd, int stdoutfd, t_mini *mini)
@@ -138,6 +163,7 @@ void	reset_dup(int stdintfd, int stdoutfd, t_mini *mini)
 		perror("dup2");
 		mini->exit_status = 1;
 	}
+	printf("end of reset_dup\n");
 }
 
 // echo alone will error. Need to find out where
@@ -154,6 +180,9 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 	int		stdoutfd;
 	int		stdintfd;
 
+	printf("\nexecute_echo\n");
+	printf("readpipe:%d|writepipe:%d\n", 
+	parameters->readpipe, parameters->writepipe);
 	str = calloc(1, sizeof(char));
 	if (str == NULL)
 		return (memoryerror(mini));
@@ -182,10 +211,15 @@ void	execute_echo(t_parameters *parameters, t_mini *mini)
 // 2. cd
 int	builtincommand(t_parameters *parameters, t_mini *mini)
 {
+	printf("\nbuiltincommand here\n");
 	if (parameters->argc < 0)
+	{
+
 		return (1);
+	}
 	else if (ft_strncmp(parameters->argv[0], "echo", ft_strlen("echo")) == 0)
 	{
+		printf("echo stuff and return 1\n");
 		execute_echo(parameters, mini);
 		return (1);
 	}
@@ -237,21 +271,29 @@ void	execution2(t_parameters *parameters, t_mini	*mini)
 {
 	pid_t	pid;
 
+	printf("execution2: check builtin or run the preocess\n");
+
 	if (parameters->argc < 0)
 	{
 		printf("return due to argc < 0 ");
 		return ;
 	}
-	printf("execution2\n");
+
 	int i = 0;
 	while (parameters->argv[i])
 	{
 		printf("argv:%d, %s\n", i, parameters->argv[i]);
 		i++;
 	}
+	printf("total i:%d\n", i);
+
 	// if there is built in
 	if (builtincommand(parameters, mini))
+	{
+		printf("it is built in. Return\n");
 		return ;
+	}
+	printf("not builtin, going to run execute process\n");
 	pid = fork();
 	executeprocess(parameters, &pid, mini);
 	return ;

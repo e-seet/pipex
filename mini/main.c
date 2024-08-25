@@ -6,10 +6,12 @@ struct s_AST_Node			*ast_node;
 void inOrderTraversal(struct s_AST_Node* root, int depth) {
     if (root != NULL) {
 		
-	    inOrderTraversal(root->left, depth);    // Traverse left subtree
-        printf("%s, %d\n", root->data, depth);       // Visit root node
-        inOrderTraversal(root->right, depth);   // Traverse right subtree
-		depth = depth + 1;
+	    inOrderTraversal(root->left, depth+1);    // Traverse left subtree
+
+		// printf("%dtype:%d\n",depth, ));
+        printf("data:%s|type:%d | depth:%d\n", root->data, nodetype((root)->type), depth);       // Visit root node
+        inOrderTraversal(root->right, depth+1);   // Traverse right subtree
+		// depth = depth + 1;
     }
 }
 
@@ -58,6 +60,33 @@ void	free_mini(t_mini *mini)
 
 }
 
+// To see things easily
+#define COLOR_STATE_FILE "color_state.txt"
+// Function to read the last color state from a file
+int read_color_state() {
+    FILE *file = fopen(COLOR_STATE_FILE, "r");
+    if (file == NULL) {
+        return 1; // Default to red if file doesn't exist
+    }
+    int state;
+    fscanf(file, "%d", &state);
+    fclose(file);
+    return state;
+}
+
+// Function to write the current color state to a file
+void write_color_state(int state) {
+    FILE *file = fopen(COLOR_STATE_FILE, "w");
+    if (file == NULL) {
+        printf("Error opening file to save state!\n");
+        exit(1);
+    }
+    fprintf(file, "%d", state);
+    fclose(file);
+}
+
+
+
 // starts the program and get the input from user.
 int	checkforexit(char *envp[])
 {
@@ -68,8 +97,26 @@ int	checkforexit(char *envp[])
 	t_parameters		*parameters;
 	t_mini				*mini;
 
-	//setup 
-	printf("\033[1;31m\n");
+	//setup for colors
+	int useRed = read_color_state(); // Read the last color state
+
+    if (useRed)
+	{
+	    // printf("\033[1;34mThis text is bold and blue.\n");
+	    printf("\033[0;36mThis text is a subtle blue.\n");
+    } else 
+	{
+	        printf("\033[1;33mThis text is bold and yellow.\n");
+    }
+    // Alternate the color for the next run
+    useRed = !useRed;
+    // Save the current state for the next execution
+    write_color_state(useRed);
+    // Reset text formatting to default
+    // printf("\033[0m");
+	// printf("\033[1;31m\n");
+	// \033[1;34m
+	// end of setup for colors
 
 	str = NULL;
 	node = NULL;
@@ -219,7 +266,7 @@ int	checkforexit(char *envp[])
 				// set up signal
 
 				printf("lexical\n");
-				printf("str:%s", str);
+				printf("str:%s\n", str);
 				node = lexical(str, mini);// this return a linked list
 				// // pass the linked list into the parser
 
@@ -227,7 +274,7 @@ int	checkforexit(char *envp[])
 				templist = node;
 				while(templist)
 				{
-					printf("templist:%s\n", templist->data);
+					printf("templist:%s %d\n", templist->data, templist->type);
 					templist = templist -> next;
 				}
 
@@ -240,7 +287,7 @@ int	checkforexit(char *envp[])
 				printf("\n\ntraversal \n");
 				int depth = 0;
 				inOrderTraversal(ast_node, depth);
-				printf("end of traversal \n");
+				printf("end of traversal \n\n");
 
 				printf("execution\n");
 				execute_syntax_tree(ast_node, parameters, mini);

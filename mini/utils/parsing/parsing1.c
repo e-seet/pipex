@@ -4,7 +4,7 @@ struct s_AST_Node	*breakcommandline_node(t_linkedlist *node, t_mini *mini)
 {
 	struct s_AST_Node	*job_node;
 
-	job_node = breakjob(node, mini);
+	job_node = breakjob(&node, mini);
 	if (job_node == NULL)
 		return (NULL);
 	if (!term(SEMICOLON, NULL, &node))
@@ -70,5 +70,5 @@ struct s_AST_Node	*breakcommandline2(t_linkedlist *node, t_mini *mini)
 
 struct s_AST_Node	*breakcommandline3(t_linkedlist *node, t_mini *mini)
 {
-	return (breakjob(node, mini));
+	return (breakjob(&node, mini));
 }
